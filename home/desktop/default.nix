@@ -30,14 +30,7 @@
     terminal = "$HOME/.local/bin/terminal";
   };
 
-  home.file.".config/i3blocks/config".source = ./i3blocks.config;
-  home.file.".local/bin/terminal".source = ./terminal;
-  home.file.".local/bin/launcher".source = ./launcher;
-
-#   programs.firefox.profiles = {
-#     home = {
-#       name = "home";
-#       isDefault = true;
-#     };
-#   };
+  home.file.".config/i3blocks/config".source = ./cfg/i3blocks;
+  home.file.".local/bin/terminal".source = ./bin/terminal;
+  home.file.".local/bin/launcher".source = ./bin/launcher;
 }

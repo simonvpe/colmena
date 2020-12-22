@@ -174,8 +174,8 @@
     enable = true;
   };
 
-  home.file.".local/bin/lock".source = ./lock;
-  home.file.".local/bin/keyboard".source = ./keyboard/keyboard;
-  home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
-  home.file.".xkb/symbols/evorak".source = ./keyboard/evorak;
+  home.file.".local/bin/lock".source = ./bin/lock;
+  home.file.".local/bin/keyboard".source = ./bin/keyboard;
+  home.file.".xkb/symbols/svorak".source = ./cfg/svorak;
+  home.file.".xkb/symbols/evorak".source = ./cfg/evorak;
 }
