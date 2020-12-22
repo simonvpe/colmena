@@ -1,3 +1,10 @@
+let
+   home-manager = builtins.fetchGit {
+    url = "https://github.com/rycee/home-manager.git";
+    rev = "63f299b3347aea183fc5088e4d6c4a193b334a41";
+    ref = "release-20.09";
+  };
+in
 {
   meta = {
     # Override to pin the Nixpkgs version (recommended). This option
@@ -14,7 +21,10 @@
   };
 
   defaults = { pkgs, ... }: {
-    # This module will be imported by all hosts
+    imports = [
+      (import "${home-manager}/nixos")
+    ];
+
     environment = {
       systemPackages = with pkgs; [
         curl
@@ -80,12 +90,16 @@
 
       resolved = {
         enable = true;
-        fallbackDns = [ "10.4.6.10" ];
-        #fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+        #fallbackDns = [ "10.4.6.10" ];
+        fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
         domains = [ "rco.local" ];
       };
 
       nscd = {
+        enable = true;
+      };
+
+      openssh = {
         enable = true;
       };
 
@@ -151,13 +165,6 @@
       defaultLocale = "en_US.UTF-8";
     };
 
-    users = {
-      users.starlord = {
-        isNormalUser = true;
-        extraGroups = [ "wheel" "docker" "libvirtd" "dialout" ];
-      };
-    };
-
     virtualisation = {
       docker = {
         enable = true;
@@ -167,9 +174,20 @@
       libvirtd.enable = true;
       virtualbox.host.enable = true;
     };
+
+    users = {
+      users.starlord = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" "docker" "libvirtd" "dialout" ];
+      };
+    };
+
   };
 
-  desktop = { name, nodes, ... }: {
+  desktop = { name, nodes, pkgs, ... }: 
+  let machine = ./home + "/${name}";
+  in
+  {
     # The name and nodes parameters are supported in Colmena,
     # allowing you to reference configurations in other nodes.
     networking = {
@@ -221,6 +239,8 @@
         videoDrivers = [ "nvidia" ];
       };
     };
+
+    home-manager.users.starlord = import ./home/home.nix { inherit pkgs machine; };
   };
 
   # host-b = {
