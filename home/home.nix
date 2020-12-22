@@ -34,7 +34,7 @@
       i3.enable = true;
       i3.package = pkgs.i3-gaps;
       i3.config = null;
-      i3.extraConfig = builtins.readFile .config/i3/config;
+      i3.extraConfig = builtins.readFile ./cfg/i3;
     };
   };
 
