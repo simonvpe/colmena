@@ -11,7 +11,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     networking.wireless.enable = true;
     networking.wireless.networks = {
       Cyberlink50.psk = "allyourbasearebelongstous";

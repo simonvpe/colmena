@@ -7,7 +7,7 @@ in
     enable = mkEnableOption "workstation mode";
   };
 
-  config = {
+  config = mkIf cfg.enable {
     environment = {
       systemPackages = with pkgs; [
         curl
