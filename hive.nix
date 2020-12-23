@@ -20,65 +20,6 @@ in
     imports = [
       ./modules
     ];
-
-    environment = {
-      systemPackages = with pkgs; [
-        curl
-        git
-        nodePackages.bitwarden-cli
-        ntfs3g
-        vim
-        wget
-      ];
-      variables.XCURSOR_SIZE = "64";
-      pathsToLink = [ "/libexec" ];
-    };
-
-    time = {
-      timeZone = "Europe/Stockholm";
-    };
-
-    nixpkgs = {
-      config.allowUnfree = true;
-    };
-
-    hardware = {
-      pulseaudio.enable = true;
-      opengl.driSupport32Bit = true;
-    };
-
-    services = {
-      resolved = {
-        enable = true;
-        fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
-      };
-
-      nscd = {
-        enable = true;
-      };
-
-      openssh = {
-        enable = true;
-      };
-    };
-
-    console = {
-      font = "Lat2-Terminus16";
-      keyMap = "dvorak";
-    };
-
-    i18n = {
-      defaultLocale = "en_US.UTF-8";
-    };
-
-    virtualisation = {
-      docker = {
-        enable = true;
-        enableNvidia = true;
-        enableOnBoot = true;
-      };
-      libvirtd.enable = true;
-    };
   };
 
   laptop = { name, nodes, pkgs, ... }:
@@ -96,6 +37,7 @@ in
       starlord.enableHomeManager = true;
       wifi.device = "wlp59s0";
       wifi.enable = true;
+      workstation.enable = true;
       x11.enable = true;
     };
 
@@ -149,6 +91,7 @@ in
       rco.enable = true;
       starlord.enable = true;
       starlord.enableHomeManager = true;
+      workstation.enable = true;
       x11.enable = true;
     };
 
