@@ -41,6 +41,10 @@ in
       x11.enable = true;
     };
 
+    networking = {
+      hostName = name;
+    };
+
     boot = {
       extraModulePackages = [ ];
       initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
@@ -56,9 +60,6 @@ in
       supportedFilesystems = [ "ntfs" ];
     };
 
-    deployment = {
-      allowLocalDeployment = true;
-    };
 
     fileSystems = {
       "/".device = "/dev/disk/by-uuid/4c8e4486-331f-4963-9fa9-6800109beca9";
@@ -67,26 +68,21 @@ in
       "/boot".fsType = "vfat";
     };
 
-    networking = {
-      hostName = name;
-    };
+
+    swapDevices = [ ];
 
     services = {
       xserver.dpi = 180;
       xserver.libinput.enable = true;
     };
-
-    sound = {
-      enable = true;
-    };
-
-    swapDevices = [ ];
   };
 
   desktop = { name, nodes, pkgs, ... }:
-  let machine = ./home + "/${name}";
-  in
   {
+    imports = [
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+    ];
+
     simux = {
       rco.enable = true;
       starlord.enable = true;
@@ -95,18 +91,8 @@ in
       x11.enable = true;
     };
 
-    sound = {
-      enable = true;
-    };
-
-    # The name and nodes parameters are supported in Colmena,
-    # allowing you to reference configurations in other nodes.
     networking = {
       hostName = name;
-    };
-
-    deployment = {
-      allowLocalDeployment = true;
     };
 
     boot = {
@@ -145,10 +131,8 @@ in
     ];
 
     services = {
-      xserver = {
-        dpi = 100;
-        videoDrivers = [ "nvidia" ];
-      };
+      xserver.dpi = 100;
+      xserver.videoDrivers = [ "nvidia" ];
     };
   };
 }

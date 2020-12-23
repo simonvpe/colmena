@@ -67,5 +67,13 @@ in
       libvirtd.enable = true;
     };
 
+    deployment = {
+      allowLocalDeployment = true;
+    };
+
+    sound = {
+      enable = true;
+    };
+
   };
 }
