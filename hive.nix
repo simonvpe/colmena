@@ -4,6 +4,11 @@ let
     rev = "63f299b3347aea183fc5088e4d6c4a193b334a41";
     ref = "release-20.09";
   };
+  nixos-hardware = builtins.fetchGit {
+    url = "https://github.com/NixOS/nixos-hardware.git";
+    rev = "87522b29a276a4cab5718e5309aa7d74bc7de75a";
+    ref = "master";
+  };
 in
 {
   meta = {
@@ -172,7 +177,6 @@ in
         enableOnBoot = true;
       };
       libvirtd.enable = true;
-      virtualbox.host.enable = true;
     };
 
     users = {
@@ -184,7 +188,81 @@ in
 
   };
 
-  desktop = { name, nodes, pkgs, ... }: 
+  laptop = { name, nodes, pkgs, ... }:
+  let machine = ./home + "/${name}";
+  in
+  {
+    imports = [
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
+      (nixos-hardware + "/dell/xps/15-9500/nvidia")
+    ];
+
+    boot = {
+      extraModulePackages = [ ];
+      initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+      initrd.kernelModules = [ ];
+      kernelModules = [ "kvm-intel" ];
+      loader.grub.configurationLimit = 2;
+      loader.grub.device = "nodev";
+      loader.grub.efiInstallAsRemovable = true;
+      loader.grub.efiSupport = true;
+      loader.grub.enable = true;
+      loader.grub.useOSProber = true;
+      loader.grub.version = 2;
+      supportedFilesystems = [ "ntfs" ];
+    };
+
+    deployment = {
+      allowLocalDeployment = true;
+    };
+
+    fileSystems = {
+      "/".device = "/dev/disk/by-uuid/4c8e4486-331f-4963-9fa9-6800109beca9";
+      "/".fsType = "ext4";
+      "/boot".device = "/dev/disk/by-uuid/44A3-0B54";
+      "/boot".fsType = "vfat";
+    };
+
+    #hardware = {
+      #bluetooth.enable = true;
+      #cpu.intel.updateMicrocode = true;
+      #nvidia.modesetting.enable = true;
+      #opengl.driSupport32Bit = true;
+      #opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+      #pulseaudio.extraModules = [ pkgs.pulseaudio-modules-bt ];
+    #};
+
+    home-manager = {
+      users.starlord = import ./home/home.nix { inherit pkgs machine; };
+    };
+
+    networking = {
+      hostName = name;
+      wireless.enable = true;
+      wireless.networks.Cyberlink50.psk = "allyourbasearebelongstous";
+      wireless.networks.Strandhyddan.psk = "8972524000";
+      wireless.networks.RCO.psk = "logonrcowlan";
+    };
+
+    #powerManagement = {
+    #  cpuFreqGovernor = pkgs.lib.mkDefault "powersave";
+    #};
+
+    services = {
+      xserver.dpi = 180;
+      xserver.libinput.enable = true;
+      #xserver.videoDrivers = [ "modesetting" "nvidia" ];
+      #upower.enable = true;
+    };
+
+    sound = {
+      enable = true;
+    };
+
+    swapDevices = [ ];
+  };
+
+  desktop = { name, nodes, pkgs, ... }:
   let machine = ./home + "/${name}";
   in
   {
@@ -242,19 +320,4 @@ in
 
     home-manager.users.starlord = import ./home/home.nix { inherit pkgs machine; };
   };
-
-  # host-b = {
-  #   # Like NixOps and Morph, Colmena will attempt to connect to
-  #   # the remote host using the attribute name by default. You
-  #   # can override it like:
-  #   deployment.targetHost = "host-b.mydomain.tld";
-
-  #   time.timeZone = "America/Los_Angeles";
-
-  #   boot.loader.grub.device = "/dev/sda";
-  #   fileSystems."/" = {
-  #     device = "/dev/sda1";
-  #     fsType = "ext4";
-  #   };
-  # };
 }
