@@ -1,14 +1,13 @@
-{ pkgs, machine }:
+{ config, pkgs }:
 
 {
   home.stateVersion = "20.03";
-
-  imports = [ machine ];
 
   home.packages = with pkgs; [
      alacritty          # Needed for the screensaver
      cmatrix            # matrix stuff for thelock screen
      direnv
+     docker
      googler            # Googles in the console
      i3blocks           # status bar for i3
      iftop              # shows active network connections
@@ -34,8 +33,28 @@
       i3.enable = true;
       i3.package = pkgs.i3-gaps;
       i3.config = null;
-      i3.extraConfig = builtins.readFile ./cfg/i3;
+      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs; };
     };
+  };
+
+  programs.git = {
+    enable = true;
+    userName = "Simon Pettersson";
+    userEmail = "simon.v.pettersson@gmail.com";
+  };
+
+  programs.bash = {
+    bashrcExtra = "";
+  };
+
+  programs.termite = {
+    enable = true;
+  };
+
+  programs.rofi = {
+    enable = true;
+    theme = "c64";
+    terminal = "${pkgs.termite}/bin/termite";
   };
 
   programs.htop = {
@@ -174,8 +193,9 @@
     enable = true;
   };
 
-  home.file.".local/bin/lock".source = ./bin/lock;
-  home.file.".local/bin/keyboard".source = ./bin/keyboard;
-  home.file.".xkb/symbols/svorak".source = ./cfg/svorak;
-  home.file.".xkb/symbols/evorak".source = ./cfg/evorak;
+  home.file.".config/i3blocks/config".source = pkgs.writeText "i3blocks" (import ./cfg/i3blocks.nix { inherit config; });
+  # home.file.".local/bin/lock".source = ./bin/lock;
+  # home.file.".local/bin/keyboard".source = ./bin/keyboard;
+  home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
+  home.file.".xkb/symbols/evorak".source = ./keyboard/evorak;
 }

@@ -18,6 +18,7 @@ in
 
   defaults = { pkgs, ... }: {
     imports = [
+      ./modules
     ];
 
     environment = {
@@ -81,18 +82,22 @@ in
   };
 
   laptop = { name, nodes, pkgs, ... }:
-  let machine = ./home + "/${name}";
-  in
   {
     imports = [
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       "${external.nixos-hardware}/dell/xps/15-9500/nvidia"
-      (import "${external.home-manager}/nixos")
-      ./modules/rco
-      ./modules/wifi
-      ./modules/battery
-      ./modules/users/starlord
     ];
+
+    simux = {
+      battery.device = "BAT0";
+      battery.enable = true;
+      rco.enable = true;
+      starlord.enable = true;
+      starlord.enableHomeManager = true;
+      wifi.device = "wlp59s0";
+      wifi.enable = true;
+      x11.enable = true;
+    };
 
     boot = {
       extraModulePackages = [ ];
@@ -120,10 +125,6 @@ in
       "/boot".fsType = "vfat";
     };
 
-    home-manager = {
-      users.starlord = import ./home/home.nix { inherit pkgs machine; };
-    };
-
     networking = {
       hostName = name;
     };
@@ -144,11 +145,12 @@ in
   let machine = ./home + "/${name}";
   in
   {
-    imports = [
-      (import "${external.home-manager}/nixos")
-      ./modules/rco
-      ./modules/users/starlord
-    ];
+    simux = {
+      rco.enable = true;
+      starlord.enable = true;
+      starlord.enableHomeManager = true;
+      x11.enable = true;
+    };
 
     sound = {
       enable = true;
@@ -205,7 +207,5 @@ in
         videoDrivers = [ "nvidia" ];
       };
     };
-
-    home-manager.users.starlord = import ./home/home.nix { inherit pkgs machine; };
   };
 }

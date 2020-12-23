@@ -39,4 +39,3 @@ xkb_symbols "svorak" {
     key <AB09>  { [         v,          V, leftdoublequotemark, grave ] };
     key <AB10>  { [         z,          Z, guillemotleft,        less ] };
 };
-
