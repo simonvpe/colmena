@@ -84,6 +84,7 @@ in
     ];
 
     simux = {
+      cuda.enable =true;
       rco.enable = true;
       starlord.enable = true;
       starlord.enableHomeManager = true;

@@ -1,6 +1,7 @@
 {
   require = [
     ./battery
+    ./cuda
     ./rco
     ./users
     ./wifi
