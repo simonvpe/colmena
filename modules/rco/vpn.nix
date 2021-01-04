@@ -22,5 +22,5 @@ writeScriptBin "vpn" ''
   sudo ${client}/bin/openfortivpn ${vpnHost} \
     --trusted-cert ${trustedCert} \
     -u ${vpnUser} \
-    -p $(${nodePackages.bitwarden-cli}/bin/bw --raw get password ${bwObject})
+    -p "$(${nodePackages.bitwarden-cli}/bin/bw --raw get password ${bwObject})"
 ''
