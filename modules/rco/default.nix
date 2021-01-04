@@ -10,6 +10,10 @@ in
   config = mkIf cfg.enable {
     nix.trustedBinaryCaches = [ "http://agentx.rco.local:8099/" ];
     nix.binaryCachePublicKeys = [ "agentx.rco.local:bZokcSvOeSOpSaZ7/SYCvTJj/563rERm0oFMUvfmK1o=" ];
+    networking.extraHosts = ''
+      10.4.6.96 gitlab.rco.local
+      10.4.6.16 rco-sto-utv01.rco.local
+    '';
     services.resolved.fallbackDns = [ "10.4.6.10" ];
     services.resolved.domains = [ "rco.local" ];
     services.udev.extraRules = ''
