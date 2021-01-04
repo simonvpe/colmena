@@ -3,6 +3,7 @@
     ./battery
     ./cuda
     ./hydra
+    ./nur
     ./rco
     ./users
     ./wifi
