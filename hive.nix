@@ -85,6 +85,7 @@ in
 
     simux = {
       cuda.enable =true;
+      hydra.enable = true;
       rco.enable = true;
       starlord.enable = true;
       starlord.enableHomeManager = true;
