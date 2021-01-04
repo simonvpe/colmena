@@ -8,6 +8,7 @@
      cmatrix            # matrix stuff for thelock screen
      direnv
      docker
+     google-cloud-sdk   # GCP CLI
      googler            # Googles in the console
      i3blocks           # status bar for i3
      iftop              # shows active network connections
