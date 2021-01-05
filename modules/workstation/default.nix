@@ -8,6 +8,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    simux.x11.enable = true;
+
     environment = {
       systemPackages = with pkgs; [
         curl

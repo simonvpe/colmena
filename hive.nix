@@ -38,7 +38,6 @@ in
       wifi.device = "wlp59s0";
       wifi.enable = true;
       workstation.enable = true;
-      x11.enable = true;
     };
 
     networking = {
@@ -85,12 +84,12 @@ in
 
     simux = {
       cuda.enable =true;
+      gaming.enable = true;
       hydra.enable = true;
       rco.enable = true;
       starlord.enable = true;
       starlord.enableHomeManager = true;
       workstation.enable = true;
-      x11.enable = true;
     };
 
     networking = {

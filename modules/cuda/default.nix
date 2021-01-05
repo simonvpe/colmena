@@ -10,5 +10,9 @@ in
   config = mkIf cfg.enable {
     environment.systemPackages = [ pkgs.cudatoolkit ];
     nixpkgs.config.allowUnfree = true;
+    hardware.opengl.enable = true;
+    hardware.opengl.driSupport32Bit = true;
+    hardware.opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+    hardware.opengl.setLdLibraryPath = true;
   };
 }

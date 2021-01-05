@@ -2,6 +2,7 @@
   require = [
     ./battery
     ./cuda
+    ./gaming
     ./hydra
     ./nur
     ./rco
