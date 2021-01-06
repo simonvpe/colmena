@@ -8,6 +8,7 @@
      cmatrix            # matrix stuff for thelock screen
      direnv
      docker
+     fd                 # like find but better
      google-cloud-sdk   # GCP CLI
      googler            # Googles in the console
      i3blocks           # status bar for i3
