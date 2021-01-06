@@ -33,8 +33,8 @@ in
       battery.device = "BAT0";
       battery.enable = true;
       rco.enable = true;
-      starlord.enable = true;
-      starlord.enableHomeManager = true;
+      users.starlord.enable = true;
+      users.starlord.enableHomeManager = true;
       wifi.device = "wlp59s0";
       wifi.enable = true;
       workstation.enable = true;
@@ -87,8 +87,8 @@ in
       gaming.enable = true;
       hydra.enable = true;
       rco.enable = true;
-      starlord.enable = true;
-      starlord.enableHomeManager = true;
+      users.starlord.enable = true;
+      users.starlord.enableHomeManager = true;
       workstation.enable = true;
     };
 

@@ -1,12 +1,12 @@
 { config, pkgs, lib, ... }:
 with lib;
 let
-  cfg = config.simux.starlord;
+  cfg = config.simux.users.starlord;
   external = import ../../../external;
 
 in
 {
-  options.simux.starlord = {
+  options.simux.users.starlord = {
     enable = mkEnableOption "starlord user";
     enableHomeManager = mkOption {
       type = types.bool;
