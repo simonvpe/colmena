@@ -30,8 +30,6 @@ in
     ];
 
     simux = {
-      battery.device = "BAT0";
-      battery.enable = true;
       rco.enable = true;
       users.starlord.enable = true;
       users.starlord.enableHomeManager = true;

@@ -9,7 +9,7 @@ in
 
   home.packages = with pkgs; [
      alacritty          # Needed for the screensaver
-     chitubox
+     #chitubox
      cmatrix            # matrix stuff for thelock screen
      cq-editor          # cadquery, CAD software
      direnv

@@ -1,6 +1,5 @@
 {
   require = [
-    ./battery
     ./cuda
     ./gaming
     ./hydra
