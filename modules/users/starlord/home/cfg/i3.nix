@@ -23,7 +23,7 @@ exec --no-startup-id autorandr --change
 
 # Set background and theme
 exec_always --no-startup-id ${pkgs.feh}/bin/feh --bg-scale ${background}
-exec_always --no-startup-id ${pkgs.pywal}/bin/wal -i ${background}
+exec_always --no-startup-id ${pkgs.pywal}/bin/wal -b 000000 --saturate 1.0 -i ${background}
 
 # Configure the default keyboard
 exec --no-startup-id ${pkgs.callPackage ../keyboard {}}
