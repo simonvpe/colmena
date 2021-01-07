@@ -1,7 +1,7 @@
 { config, pkgs }:
 
 let chitubox = pkgs.callPackage ./apps/chitubox.nix {};
-    background = builtins.fetchurl { url = "https://images.wallpaperscraft.com/image/portal_totem_imagination_122691_3840x2160.jpg"; };
+    background = builtins.fetchurl { url = "https://i.redd.it/s8y93ms62r961.jpg"; };
 
 in
 {
@@ -148,9 +148,6 @@ in
     ]);
     withNodeJs = true;
     plugins = with pkgs.vimPlugins; [
-      # Colors
-      awesome-vim-colorschemes
-
       # The rest
       ale
       fzf-vim                   # A command-line fuzzy finder
