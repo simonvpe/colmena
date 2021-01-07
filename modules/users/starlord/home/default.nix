@@ -58,6 +58,7 @@ in
 
   programs.termite = {
     enable = true;
+    backgroundColor = "rgba(0, 0, 0, 0.5)";
   };
 
   programs.rofi = {
@@ -98,6 +99,8 @@ in
       export MANPAGER="sh -c 'col -b | bat -l man -p'"
       export EDITOR=nvim
       eval "$(direnv hook bash)"
+      (cat ~/.cache/wal/sequences &)
+      source ~/.cache/wal/colors-tty.sh
     '';
     shellAliases = {
       "cat" = "bat";
