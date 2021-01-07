@@ -1,6 +1,7 @@
 { config, pkgs }:
 
 let chitubox = pkgs.callPackage ./apps/chitubox.nix {};
+    background = builtins.fetchurl { url = "https://images6.alphacoders.com/350/350226.jpg"; };
 
 in
 {
@@ -41,7 +42,7 @@ in
       i3.enable = true;
       i3.package = pkgs.i3-gaps;
       i3.config = null;
-      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs; };
+      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background; };
     };
   };
 
@@ -163,10 +164,11 @@ in
       vim-sensible              # Defaults everyone can agree on
       vim-signify               # Show a diff using Vim its sign column
       vim-surround              # Quoting/parenthesizing made simple
+      wal-vim                   # Use pywal color theme
     ];
     extraConfig = ''
       " General settings
-      colors materialbox
+      colorscheme wal
       syntax on
       set number relativenumber
       set ff=unix
