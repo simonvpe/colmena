@@ -1,9 +1,40 @@
 { config, pkgs, ... }:
 let
-  wifi = if !config.simux.wifi.enable then "" else ''
-    # simux.wifi.enable
+  wifi = ''
     [wifi]
-    command=${../../../../wifi/wifi-statusbar} ${config.simux.wifi.device}
+    command=${pkgs.writeTextFile {
+      name = "wifi-statusbar";
+      executable = true;
+      text = ''
+          #!/usr/bin/env bash
+          readonly nic=wlp59s0
+          readonly signal=$(grep $nic /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+          readonly ssid=$(iwgetid | grep $nic | cut -d: -f2 | sed 's/"//g')
+          readonly white="$(xrdb -query | grep '*color5' | awk '{print $NF}')"
+          readonly orange="$(xrdb -query | grep '*color4' | awk '{print $NF}')"
+          readonly orangered="$(xrdb -query | grep '*color3' | awk '{print $NF}')"
+          readonly symbol=
+
+          [[ ! -d /sys/class/net/$nic/wireless ]] && exit
+
+          # If the wifi interface exists but no connection is active, "down" shall be displayed.
+          case "$(cat /sys/class/net/$nic/operstate)" in
+              up)
+              if [[ $signal -ge 75 ]]; then
+                  printf '<span color="%s">%s %s</span>\n' "$white" "$symbol" "$ssid"
+              elif [[ $signal -ge 50 ]]; then
+                  printf '<span color="%s">%s %s</span>\n' "$orange" "$symbol" "$ssid"
+              else
+                  printf '<span color="%s">%s %s</span>\n' "$orangered" "$symbol" "$ssid"
+              fi
+              ;;
+
+              down)
+              printf '<span color="%s">%s</span>\n' "#333333" "$symbol"
+              ;;
+          esac
+      '';
+    }}
     interval=5
   '';
 
@@ -24,7 +55,7 @@ let
         elif [ "$capacity" -ge 25 ]; then
           color="$(xrdb -query | grep '*color3' | awk '{print $NF}')"
         else
-          color="$(xrdb -query | grep '*color3' | awk '{print $NF}')"
+          color="$(xrdb -query | grep '*color2' | awk '{print $NF}')"
         fi
 
         if [ "$status" = Charging ]; then
