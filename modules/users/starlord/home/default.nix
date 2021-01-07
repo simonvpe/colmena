@@ -63,7 +63,7 @@ in
 
   programs.rofi = {
     enable = true;
-    theme = "c64";
+    theme = "~/.cache/wal/colors-rofi-dark.rasi";
     terminal = "${pkgs.termite}/bin/termite";
   };
 
