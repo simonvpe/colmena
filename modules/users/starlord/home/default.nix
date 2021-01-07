@@ -1,12 +1,18 @@
 { config, pkgs }:
 
+let chitubox = pkgs.callPackage ./apps/chitubox.nix {};
+
+in
 {
   home.stateVersion = "20.03";
 
   home.packages = with pkgs; [
      alacritty          # Needed for the screensaver
+     chitubox
      cmatrix            # matrix stuff for thelock screen
+     cq-editor          # cadquery, CAD software
      direnv
+     discord
      docker
      fd                 # like find but better
      google-cloud-sdk   # GCP CLI
