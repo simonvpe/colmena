@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let
   wifi = if !config.simux.wifi.enable then "" else ''
     # simux.wifi.enable
@@ -13,6 +13,21 @@ let
     command=${../../../../battery/battery-statusbar} ${config.simux.battery.device}
     interval=5
   '';
+
+  date = ''
+    [date]
+    command=${pkgs.writeTextFile {
+      name = "date-statusbar";
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        readonly color="$(xrdb -query | grep '*color5'| awk '{print $NF}')"
+        readonly date="$(date)"
+        printf '<span color="%s">%s</span>\n' "$color" "$date"
+      '';
+    }}
+    interval=1
+  '';
 in
 ''
 # https://github.com/LukeSmithxyz/voidrice
@@ -23,7 +38,5 @@ ${wifi}
 
 ${battery}
 
-[date]
-command=date
-interval=1
+${date}
 ''

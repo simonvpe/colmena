@@ -205,7 +205,7 @@ in
     enable = true;
   };
 
-  home.file.".config/i3blocks/config".source = pkgs.writeText "i3blocks" (import ./cfg/i3blocks.nix { inherit config; });
+  home.file.".config/i3blocks/config".source = pkgs.writeText "i3blocks" (import ./cfg/i3blocks.nix { inherit config pkgs; });
   # home.file.".local/bin/lock".source = ./bin/lock;
   # home.file.".local/bin/keyboard".source = ./bin/keyboard;
   home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
