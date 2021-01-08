@@ -18,7 +18,6 @@ in
      fd                 # like find but better
      google-cloud-sdk   # GCP CLI
      googler            # Googles in the console
-     i3blocks           # status bar for i3
      iftop              # shows active network connections
      jq                 # like sed for json
      linuxPackages.perf # performance monitor applications
@@ -202,9 +201,77 @@ in
     enable = true;
   };
 
-  home.file.".config/i3blocks/config".source = pkgs.writeText "i3blocks" (import ./cfg/i3blocks.nix { inherit config pkgs; });
-  # home.file.".local/bin/lock".source = ./bin/lock;
-  # home.file.".local/bin/keyboard".source = ./bin/keyboard;
+  services.polybar = {
+    enable = true;
+    package = (pkgs.polybar.override {
+      i3GapsSupport = true;
+      i3 = pkgs.i3-gaps;
+      alsaSupport = true;
+      githubSupport = true;
+    }).overrideAttrs (x: {
+      cmakeFlags = (x.cmakeFlags or []) ++ [
+        "-DENABLE_I3=ON"
+      ];
+    });
+    script = ''
+      export PATH=${pkgs.xorg.xrandr}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin:$PATH
+      for monitor in $(xrandr --query | grep " connected" | cut -d' ' -f1); do
+        MONITOR=$monitor polybar top &
+      done
+    '';
+    config = {
+      "colors" = {
+        background = "\${xrdb:color0}";
+        foreground = "\${xrdb:color7}";
+        primary = "\${xrdb:color1}";
+        secondary = "\${xrdb:color2}";
+        alert = "${xrdb:color3}";
+      };
+      "bar/top" = {
+        monitor = "\${env:MONITOR}";
+        width = "100%";
+        height = "1%";
+        radius = 0;
+        background = "\${colors.background}";
+        foreground = "\${colors.foreground}";
+        modules-left = "i3";
+        modules-right = "date";
+      };
+      "module/date" = {
+        type = "internal/date";
+        interval = 1;
+        date = "%Y-%m-%d";
+        time = "%H:%M:%S";
+        label = "%date% %time%";
+      };
+      "module/i3" = {
+        type = "internal/i3";
+        pin-workspaces = true;
+        strip-wsnumbers = true;
+        index-sort = true;
+        enable-click = false;
+        enable-scroll = false;
+        wrapping-scroll = false;
+        reverse-scroll = false;
+        fuzzy-match = true;
+        format = "<label-state> <label-mode>";
+        label-mode = "%mode%";
+        label-mode-padding = 2;
+        label-mode-background = "#e60053";
+        label-focused = "%index%";
+        label-focused-foreground = "\${colors.secondary}";
+        label-focused-background = "\${colors.background}";
+        label-focused-underline = "\${colors.primary}";
+        label-focused-padding = 0;
+        label-unfocused = "%index%";
+        label-unfocused-padding = 0;
+        label-separator = "|";
+        label-separator-padding = 1;
+        label-separator-foreground = "\${colors.primary}";
+      };
+    };
+  };
+
   home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
   home.file.".xkb/symbols/evorak".source = ./keyboard/evorak;
 }

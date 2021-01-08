@@ -175,11 +175,11 @@ bindsym $mod+p mode "resize"
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-        position top
-        status_command i3blocks
+# bar {
+#         position top
+#         status_command i3blocks
 
-}
+# }
 
 for_window [class=".*"] border pixel 0
 gaps inner 20
