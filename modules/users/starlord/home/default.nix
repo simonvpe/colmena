@@ -1,7 +1,7 @@
 { config, pkgs }:
 
 let chitubox = pkgs.callPackage ./apps/chitubox.nix {};
-    background = builtins.fetchurl { url = "https://i.redd.it/s8y93ms62r961.jpg"; };
+    background = builtins.fetchurl { url = "https://i.redd.it/dy9xn211uo861.jpg"; };
 
 in
 {
