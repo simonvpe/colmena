@@ -13,5 +13,6 @@ in
     services.hydra.notificationSender = "hydra@thesourcerer.se";
     services.hydra.buildMachinesFiles = [];
     services.hydra.useSubstitutes = true;
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 }
