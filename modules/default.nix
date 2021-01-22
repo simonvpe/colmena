@@ -1,6 +1,7 @@
 {
   require = [
     ./cuda
+    ./flakes
     ./gaming
     ./hydra
     ./nur

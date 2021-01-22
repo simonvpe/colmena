@@ -82,8 +82,9 @@ in
 
     simux = {
       cuda.enable =true;
+      flakes.enable = true;
       gaming.enable = true;
-      hydra.enable = true;
+      hydra.enable = false; # broken right now
       rco.enable = true;
       users.starlord.enable = true;
       users.starlord.enableHomeManager = true;
