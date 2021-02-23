@@ -2,5 +2,5 @@ with import <nixpkgs> { };
 
 import "${fetchgit {
   url = "https://github.com/zhaofengli/colmena.git";
-  sha256 = "0dvp3w0msgrkbh48m6hxzl43m1hrliwdbn6dygsk8qvd22i3nfa7";
+  sha256 = "1agbp0fwwilpv64h8vdgjlqrvcrqhlcr9bjk486cjd05jj3vkljg";
 }}/shell.nix"
