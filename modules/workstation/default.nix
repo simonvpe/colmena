@@ -37,14 +37,14 @@ in
     };
 
     services = {
-      resolved = {
-        enable = true;
-        fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
-      };
+      # resolved = {
+      #   enable = true;
+      #   fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+      # };
 
-      nscd = {
-        enable = true;
-      };
+      # nscd = {
+      #   enable = true;
+      # };
 
       openssh = {
         enable = true;
