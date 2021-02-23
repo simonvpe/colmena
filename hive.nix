@@ -82,7 +82,7 @@ in
 
     simux = {
       cuda.enable =true;
-      flakes.enable = true;
+      flakes.enable = false;
       gaming.enable = true;
       hydra.enable = false; # broken right now
       rco.enable = true;
@@ -91,8 +91,14 @@ in
       workstation.enable = true;
     };
 
+    # For building for raspberry pi
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
     networking = {
       hostName = name;
+      enableIPv6 = true;
+      interfaces.enp4s0.tempAddress = "enabled";
+      interfaces.enp4s0.useDHCP = true;
     };
 
     boot = {
