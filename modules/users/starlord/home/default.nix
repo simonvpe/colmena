@@ -49,6 +49,10 @@ in
     enable = true;
     userName = "Simon Pettersson";
     userEmail = "simon.v.pettersson@gmail.com";
+    extraConfig = ''
+      [alias]
+      brd = !git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:iso8601)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'
+    '';
   };
 
   programs.bash = {
