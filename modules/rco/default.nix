@@ -13,6 +13,7 @@ in
     networking.extraHosts = ''
       10.4.6.96 gitlab.rco.local
       10.4.6.16 rco-sto-utv01.rco.local
+      10.4.7.241 rco-vault01.rco.local
     '';
     services.resolved.fallbackDns = [ "10.4.6.10" ];
     services.resolved.domains = [ "rco.local" ];
