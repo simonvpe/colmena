@@ -30,6 +30,7 @@ in
     ];
 
     simux = {
+      flakes.enable = true;
       rco.enable = true;
       users.starlord.enable = true;
       users.starlord.enableHomeManager = true;
@@ -40,6 +41,9 @@ in
 
     networking = {
       hostName = name;
+      enableIPv6 = true;
+      interfaces.enp4s0.tempAddress = "enabled";
+      interfaces.enp4s0.useDHCP = true;
     };
 
     boot = {
