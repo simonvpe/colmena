@@ -33,6 +33,7 @@ in
      xautolock          # automatic lock screen
      xorg.xkbcomp       # needed for custom keyboard maps
      xtrlock-pam        # a simple lock screen
+     irssi              # irc
   ];
 
   xsession = {
@@ -168,6 +169,7 @@ in
       vim-signify               # Show a diff using Vim its sign column
       vim-surround              # Quoting/parenthesizing made simple
       wal-vim                   # Use pywal color theme
+      vim-sleuth                # Automatically adapt to indentation style
     ];
     extraConfig = ''
       " General settings
