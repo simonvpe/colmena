@@ -159,24 +159,6 @@ in
     plugins = with pkgs.vimPlugins; [
       # The rest
       ale
-      <<<<<<< HEAD
-      fzf-vim # A command-line fuzzy finder
-      indentLine # A vim plugin to display the indention levels with thin vertical lines
-      rainbow_parentheses # Simpler Rainbow Parentheses
-      semshi # Semantic Highlighting for Python in Neovim
-      vim-airline # lean & mean status/tabline for vim that's light as air
-      vim-better-whitespace # Better whitespace highlighting for Vim
-      vim-commentary # Comment stuff out
-      vim-eunuch # Helpers for UNIX
-      vim-fugitive # A Git wrapper so awesome, it should be illegal
-      vim-hoogle # Vim plugin used to query hoogle
-      vim-nix # Vim configuration files for Nix
-      vim-sensible # Defaults everyone can agree on
-      vim-signify # Show a diff using Vim its sign column
-      vim-surround # Quoting/parenthesizing made simple
-      wal-vim # Use pywal color theme
-      vim-sleuth # Automatically adapt to indentation style
-      =======
       fzf-vim # A command-line fuzzy finder
       indentLine # A vim plugin to display the indention levels with thin vertical lines
       neoformat
@@ -193,8 +175,7 @@ in
       vim-signify # Show a diff using Vim its sign column
       vim-surround # Quoting/parenthesizing made simple
       wal-vim # Use pywal color theme
-      >>>>>>> b3cd0fc
-      (stuff)
+      vim-sleuth
     ];
     extraConfig = ''
       " General settings
