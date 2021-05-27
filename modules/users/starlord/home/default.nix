@@ -1,9 +1,9 @@
 { config, pkgs }:
-let
-  chitubox = pkgs.callPackage ./apps/chitubox.nix { };
-  background = builtins.fetchurl { url = "https://i.redd.it/dy9xn211uo861.jpg"; };
+#let
+  # chitubox = pkgs.callPackage ./apps/chitubox.nix { };
+  # background = builtins.fetchurl { url = "https://i.redd.it/dy9xn211uo861.jpg"; };
 
-in
+#in
 {
   home.stateVersion = "20.03";
 
@@ -47,7 +47,7 @@ in
       i3.enable = true;
       i3.package = pkgs.i3-gaps;
       i3.config = null;
-      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background; };
+      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs; };
     };
   };
 
@@ -97,9 +97,9 @@ in
     enableSshSupport = true;
   };
 
-  programs.home-manager = {
-    enable = true;
-  };
+  #   programs.home-manager = {
+  #     enable = true;
+  #   };
 
   programs.bash = {
     enable = true;
@@ -155,7 +155,7 @@ in
       pylint
       pep8
     ]);
-    withNodeJs = true;
+    withNodeJs = false;
     plugins = with pkgs.vimPlugins; [
       # The rest
       ale
@@ -295,5 +295,5 @@ in
 
   home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
   home.file.".xkb/symbols/evorak".source = ./keyboard/evorak;
-  home.file.".python-gitlab.cfg".source = ./python-gitlab/.python-gitlab.cfg;
+  # home.file.".python-gitlab.cfg".source = ./python-gitlab/.python-gitlab.cfg;
 }

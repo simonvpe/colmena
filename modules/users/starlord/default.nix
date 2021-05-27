@@ -14,10 +14,6 @@ in
     };
   };
 
-  imports = [
-    (import "${external.home-manager}/nixos")
-  ];
-
   config = mkMerge [
     (mkIf cfg.enable {
       nix.trustedUsers = [ "starlord" ];

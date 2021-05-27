@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 with lib;
-let cfg = config.simux.gaming;
+let
+  cfg = config.simux.gaming;
+
 in
 {
   options.simux.gaming = {
@@ -8,8 +10,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    programs.steam.enable = true;
     simux.x11.enable = true;
-    environment.systemPackages = [ pkgs.steam ];
     nixpkgs.config.allowUnfree = true;
   };
 }
