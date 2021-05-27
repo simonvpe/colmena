@@ -1,9 +1,12 @@
 { config, pkgs }:
-#let
+let
   # chitubox = pkgs.callPackage ./apps/chitubox.nix { };
-  # background = builtins.fetchurl { url = "https://i.redd.it/dy9xn211uo861.jpg"; };
+  background = pkgs.fetchurl {
+    url = "https://i.redd.it/dy9xn211uo861.jpg";
+    sha256 = "0xd1iaddcfryf6q69j4jy2ypbgq09fh5iynw2a2hi7608r48fxk0";
+  };
 
-#in
+in
 {
   home.stateVersion = "20.03";
 
@@ -47,7 +50,7 @@
       i3.enable = true;
       i3.package = pkgs.i3-gaps;
       i3.config = null;
-      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs; };
+      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background; };
     };
   };
 
