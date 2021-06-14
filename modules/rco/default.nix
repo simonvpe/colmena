@@ -16,6 +16,7 @@ in
       10.4.6.96 rbx.gitpages.rco.local
       10.4.6.16 rco-sto-utv01.rco.local
       10.4.7.241 rco-vault01.rco.local
+      10.4.6.94 rco-st118.rco.local
     '';
     services.resolved.fallbackDns = [ "10.4.6.10" ];
     services.resolved.domains = [ "rco.local" ];
@@ -49,6 +50,6 @@ in
       SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="0d02", MODE="0666"
       SUBSYSTEM=="usb", ATTRS{idVendor}=="3016", ATTRS{idProduct}=="0001", MODE="0666"
     '';
-    environment.systemPackages = [ (pkgs.callPackage ./vpn.nix {}) ];
+    environment.systemPackages = [ (pkgs.callPackage ./vpn.nix { }) ];
   };
 }
