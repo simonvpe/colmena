@@ -2,8 +2,6 @@
 with lib;
 let
   cfg = config.simux.users.starlord;
-  external = import ../../../external;
-
 in
 {
   options.simux.users.starlord = {

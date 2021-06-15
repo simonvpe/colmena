@@ -7,6 +7,7 @@
     let modules = {
       simux = ./modules;
       laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500-nvidia;
+      #laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500;
       not-detected = "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix";
       home-manager = home-manager.nixosModules.home-manager;
       home-manager-cfg = {
@@ -33,7 +34,7 @@
 
               simux = {
                 flakes.enable = true;
-                rco.enable = true;
+                rco.enable = false;
                 users.starlord.enable = true;
                 users.starlord.enableHomeManager = true;
                 wifi.device = "wlp59s0";
@@ -41,7 +42,9 @@
                 workstation.enable = true;
               };
 
-              boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+              nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
+
+              # boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
               networking = {
                 hostName = "laptop";
@@ -67,7 +70,7 @@
               fileSystems = {
                 "/".device = "/dev/disk/by-uuid/4c8e4486-331f-4963-9fa9-6800109beca9";
                 "/".fsType = "ext4";
-                "/boot".device = "/dev/disk/by-uuid/44A3-0B54";
+                "/boot".device = "/dev/disk/by-uuid/F34E-82A5";
                 "/boot".fsType = "vfat";
               };
 

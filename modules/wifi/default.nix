@@ -18,6 +18,7 @@ in
       Strandhyddan.psk = "8972524000";
       RCO.psk = "logonrcowlan";
       Finkontoret.psk = "strosaitrosa";
+      OWNIT-5GHz_BE20.psk = "Q72CRXMKP7BXYL"; # Elins
     };
   };
 }
