@@ -49,6 +49,7 @@
               networking = {
                 hostName = "laptop";
                 enableIPv6 = true;
+                wireless.interfaces = [ "wlp59s0" ];
               };
 
               boot = {
