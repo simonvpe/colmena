@@ -8,9 +8,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    nix.binaryCaches = [ "http://agentx.rco.local:8099/" ];
-    nix.trustedBinaryCaches = [ "http://agentx.rco.local:8099/" ];
-    nix.binaryCachePublicKeys = [ "agentx.rco.local:bZokcSvOeSOpSaZ7/SYCvTJj/563rERm0oFMUvfmK1o=" ];
+    nix.binaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
+    nix.trustedBinaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
+    nix.binaryCachePublicKeys = [ ];
     networking.extraHosts = ''
       10.4.6.96 gitlab.rco.local
       10.4.6.96 rbx.gitpages.rco.local
