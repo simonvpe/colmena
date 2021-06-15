@@ -24,9 +24,11 @@ in
 
   laptop = { name, nodes, pkgs, ... }:
   {
+    deployment.allowLocalDeployment = true;
     imports = [
       <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       "${external.nixos-hardware}/dell/xps/15-9500/nvidia"
+      "${external.home-manager}/nixos"
     ];
 
     simux = {
@@ -39,11 +41,11 @@ in
       workstation.enable = true;
     };
 
+    boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
     networking = {
       hostName = name;
       enableIPv6 = true;
-      interfaces.enp4s0.tempAddress = "enabled";
-      interfaces.enp4s0.useDHCP = true;
     };
 
     boot = {

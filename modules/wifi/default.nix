@@ -17,6 +17,7 @@ in
       Cyberlink50.psk = "allyourbasearebelongstous";
       Strandhyddan.psk = "8972524000";
       RCO.psk = "logonrcowlan";
+      Finkontoret.psk = "strosaitrosa";
     };
   };
 }
