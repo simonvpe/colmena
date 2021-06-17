@@ -11,6 +11,7 @@ in
     nix.binaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
     nix.trustedBinaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
     nix.binaryCachePublicKeys = [ ];
+    nix.requireSignedBinaryCaches = false;
     networking.extraHosts = ''
       10.4.6.96 gitlab.rco.local
       10.4.6.96 rbx.gitpages.rco.local

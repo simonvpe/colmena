@@ -19,6 +19,23 @@
         "type": "github"
       }
     },
+    "nix-top": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1532916077,
+        "narHash": "sha256-+n4iRymvXOFU0JwDiF44b5EdS7I2qD0yMecSi15SwBQ=",
+        "owner": "samueldr",
+        "repo": "nix-top",
+        "rev": "25490a367939e5e7b72c8c57df06d402e12fbfcd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "samueldr",
+        "ref": "v0.2.0",
+        "repo": "nix-top",
+        "type": "github"
+      }
+    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1623569835,
@@ -68,6 +85,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "nix-top": "nix-top",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2"
       }

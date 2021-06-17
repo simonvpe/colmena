@@ -2,19 +2,28 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.home-manager.url = "github:nix-community/home-manager/release-21.05";
   inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+  inputs.nix-top.url = "github:samueldr/nix-top/v0.2.0";
+  inputs.nix-top.flake = false;
 
-  outputs = { self, nixpkgs, home-manager, nixos-hardware }:
-    let modules = {
-      simux = ./modules;
-      laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500-nvidia;
-      #laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500;
-      not-detected = "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix";
-      home-manager = home-manager.nixosModules.home-manager;
-      home-manager-cfg = {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
+  outputs = { self, nixpkgs, home-manager, nixos-hardware, nix-top }:
+    let
+      modules = {
+        simux = ./modules;
+        laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500-nvidia;
+        #laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500;
+        not-detected = "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix";
+        home-manager = home-manager.nixosModules.home-manager;
+        home-manager-cfg = {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+        };
       };
-    };
+
+      legacyPkgs = import nixpkgs.outPath {
+        system = "x86_64-linux";
+        overlays = [ (_: super: { stdenv = super.stdenv // { inherit (super) lib; }; }) ];
+      };
+
     in
     {
       nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
@@ -32,9 +41,13 @@
                 modules.home-manager-cfg
               ];
 
+              environment.systemPackages = [
+                (import nix-top { pkgs = legacyPkgs; })
+              ];
+
               simux = {
                 flakes.enable = true;
-                rco.enable = false;
+                rco.enable = true;
                 users.starlord.enable = true;
                 users.starlord.enableHomeManager = true;
                 wifi.device = "wlp59s0";
@@ -182,4 +195,4 @@
           ];
       };
     };
-  }
+}
