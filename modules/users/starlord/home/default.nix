@@ -14,7 +14,7 @@ in
     #chitubox
     alacritty # Needed for the screensaver
     cmatrix # matrix stuff for thelock screen
-    cq-editor # cadquery, CAD software
+    #cq-editor # cadquery, CAD software
     direnv
     #discord
     docker
@@ -84,16 +84,16 @@ in
     enable = true;
   };
 
-  # programs.firefox = {
-  #   enable = true;
-  #   # https://gitlab.com/rycee/nur-expressions/-/blob/master/pkgs/firefox-addons/addons.json
-  #  extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-  #    bitwarden
+  programs.firefox = {
+    enable = true;
+    # https://gitlab.com/rycee/nur-expressions/-/blob/master/pkgs/firefox-addons/addons.json
+   # extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+   #   bitwarden
   # #     privacy-badger
   # #     vim-vixen
   # #     adsum-notabs
-  #  ];
-  # };
+   # ];
+  };
 
   services.gpg-agent = {
     enable = true;
@@ -155,7 +155,7 @@ in
     vimAlias = true;
     withPython3 = true;
     extraPython3Packages = (ps: with ps; [
-      python-language-server
+      #python-language-server
       pylint
       pep8
     ]);

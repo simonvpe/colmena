@@ -26,16 +26,17 @@
 
     in
     {
-      nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
+      nixosConfigurations.hyperactivitydrive = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules =
           [
             ({ pkgs, ... }: {
+              system.stateVersion = "21.11"; # Did you read the comment?
               system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
 
               imports = [
                 modules.simux
-                modules.laptop-hardware
+                #modules.laptop-hardware
                 modules.not-detected
                 modules.home-manager
                 modules.home-manager-cfg
@@ -45,51 +46,58 @@
                 (import nix-top { pkgs = legacyPkgs; })
               ];
 
+              users.users.root.initialHashedPassword = "";
+
               simux = {
-                flakes.enable = true;
-                rco.enable = true;
+                rco.enable = false;
                 users.starlord.enable = true;
                 users.starlord.enableHomeManager = true;
-                wifi.device = "wlp59s0";
+                wifi.device = "wlo1";
                 wifi.enable = true;
                 workstation.enable = true;
               };
 
+	      nix.package = pkgs.nixUnstable;
               nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
-
-              # boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+              nix.extraOptions = ''
+                experimental-features = nix-command flakes
+              '';
 
               networking = {
-                hostName = "laptop";
+                hostName = "hyperactivitydrive";
                 enableIPv6 = true;
-                wireless.interfaces = [ "wlp59s0" ];
+                wireless.interfaces = [ "wlo1" ];
               };
 
-              boot = {
-                extraModulePackages = [ ];
-                initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
-                initrd.kernelModules = [ ];
-                kernelModules = [ "kvm-intel" ];
-                loader.grub.configurationLimit = 2;
-                loader.grub.device = "nodev";
-                loader.grub.efiInstallAsRemovable = true;
-                loader.grub.efiSupport = true;
-                loader.grub.enable = true;
-                loader.grub.useOSProber = true;
-                loader.grub.version = 2;
-                supportedFilesystems = [ "ntfs" ];
+              boot.loader.grub.enable = true;
+              boot.loader.grub.configurationLimit = 2;
+              boot.loader.grub.device = "nodev";
+              boot.loader.grub.efiInstallAsRemovable = false;
+              boot.loader.grub.efiSupport = true;
+              boot.loader.grub.useOSProber = true;
+              boot.loader.grub.version = 2;
+              boot.loader.efi.canTouchEfiVariables = true;
+              boot.supportedFilesystems = [ "ntfs" ];
+              boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" ];
+              boot.initrd.kernelModules = [ ];
+              boot.kernelModules = [ "kvm-intel" ];
+              boot.extraModulePackages = [ ];
+
+              fileSystems."/" = {
+                device = "/dev/disk/by-uuid/506c69ff-c136-4e26-ba53-66f63f14be11";
+                fsType = "ext4";
               };
 
-
-              fileSystems = {
-                "/".device = "/dev/disk/by-uuid/4c8e4486-331f-4963-9fa9-6800109beca9";
-                "/".fsType = "ext4";
-                "/boot".device = "/dev/disk/by-uuid/F34E-82A5";
-                "/boot".fsType = "vfat";
+              fileSystems."/boot" = {
+                device = "/dev/disk/by-uuid/60C5-10BF";
+                fsType = "vfat";
               };
-
 
               swapDevices = [ ];
+
+              powerManagement.cpuFreqGovernor = pkgs.lib.mkDefault "powersave";
+
+              hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
 
               services = {
                 xserver.dpi = 180;
