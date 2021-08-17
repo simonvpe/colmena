@@ -37,6 +37,7 @@ in
     xautolock # automatic lock screen
     xorg.xkbcomp # needed for custom keyboard maps
     xtrlock-pam # a simple lock screen
+    krita
 
     irssi # irc
     # TODO:

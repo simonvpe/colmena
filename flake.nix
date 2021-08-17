@@ -42,6 +42,7 @@
                 modules.home-manager-cfg
               ];
 
+              
               environment.systemPackages = [
                 (import nix-top { pkgs = legacyPkgs; })
               ];
@@ -101,6 +102,12 @@
               hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
 
               services = {
+                xserver.displayManager.sessionCommands = ''
+                  ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
+                    Xcursor.theme: Adwaita
+                    Xcursor.size: 48
+                  EOF
+                '';
                 xserver.dpi = 180;
                 xserver.libinput.enable = true;
               };
