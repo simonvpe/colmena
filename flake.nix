@@ -49,9 +49,8 @@
               users.users.root.initialHashedPassword = "";
 
               simux = {
-                rco.enable = false;
                 users.starlord.enable = true;
-                users.starlord.enableHomeManager = true;
+                users.rco.enable = true;
                 wifi.device = "wlo1";
                 wifi.enable = true;
                 workstation.enable = true;
@@ -69,6 +68,7 @@
                 wireless.interfaces = [ "wlo1" ];
               };
 
+              # boot.loader.systemd-boot.enable = true;
               boot.loader.grub.enable = true;
               boot.loader.grub.configurationLimit = 2;
               boot.loader.grub.device = "nodev";
@@ -77,6 +77,7 @@
               boot.loader.grub.useOSProber = true;
               boot.loader.grub.version = 2;
               boot.loader.efi.canTouchEfiVariables = true;
+              boot.loader.efi.efiSysMountPoint = "/boot";
               boot.supportedFilesystems = [ "ntfs" ];
               boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "vmd" "nvme" ];
               boot.initrd.kernelModules = [ ];

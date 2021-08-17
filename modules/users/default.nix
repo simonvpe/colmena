@@ -1,5 +1,6 @@
-{
+{ pkgs, ...}: {
   require = [
-    ./starlord
+    (import ./starlord {})
+    (import ./rco)
   ];
 }

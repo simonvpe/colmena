@@ -5,7 +5,6 @@
     ./gaming
     ./hydra
     ./nur
-    ./rco
     ./users
     ./wifi
     ./workstation

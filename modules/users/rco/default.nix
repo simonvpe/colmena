@@ -1,17 +1,6 @@
-{ config, lib, pkgs, ... }:
-with lib;
-let cfg = config.simux.rco;
-in
-{
-  options.simux.rco = {
-    enable = mkEnableOption "rco adaptions";
-  };
-
-  config = mkIf cfg.enable {
-    nix.binaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
-    nix.trustedBinaryCaches = [ "http://rco-gitcache-01.rco.local:8099/" ];
-    nix.binaryCachePublicKeys = [ ];
-    nix.requireSignedBinaryCaches = false;
+import ../starlord rec {
+  username = "rco";
+  extraConfig = { cfg, orig, pkgs }: {
     networking.extraHosts = ''
       10.4.6.96 gitlab.rco.local
       10.4.6.96 rbx.gitpages.rco.local
@@ -51,6 +40,11 @@ in
       SUBSYSTEM=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="0d02", MODE="0666"
       SUBSYSTEM=="usb", ATTRS{idVendor}=="3016", ATTRS{idProduct}=="0001", MODE="0666"
     '';
-    environment.systemPackages = [ (pkgs.callPackage ./vpn.nix { }) ];
+    home-manager.users.${username} = pkgs.lib.recursiveUpdate orig.home-manager.users.${username} {
+      home.packages = orig.home-manager.users.${username}.home.packages ++ [
+	(pkgs.callPackage ./vpn.nix { })
+      ];
+      home.file.".config/nix/nix.conf".source = ./nix.conf;
+    };
   };
 }
