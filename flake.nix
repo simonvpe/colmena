@@ -7,13 +7,80 @@
 
   outputs = { self, nixpkgs, home-manager, nixos-hardware, nix-top }:
     let
+      apps = {
+        nix-top = import nix-top { pkgs = legacyPkgs; };
+      };
       modules = {
-        simux = ./modules;
-        laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500-nvidia;
-        #laptop-hardware = nixos-hardware.nixosModules.dell-xps-15-9500;
-        not-detected = "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix";
-        home-manager = home-manager.nixosModules.home-manager;
-        home-manager-cfg = {
+        system = hostname: { pkgs, ... }: {
+          imports = [
+            "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix"
+          ];
+          system.stateVersion = "21.11";
+          system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+          users.users.root.initialHashedPassword = "";
+          nixpkgs.config.allowUnfree = true;
+          nix.package = pkgs.nixUnstable;
+          nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
+          nix.extraOptions = "experimental-features = nix-command flakes";
+          networking.hostName = hostname;
+          networking.enableIPv6 = true;
+          networking.useNetworkd = true;
+          networking.useDHCP = false; # cannot be used together with networkd
+          time.timeZone = "Europe/Stockholm";
+          hardware.pulseaudio.enable = true;
+          hardware.opengl.driSupport32Bit = true;
+          services.openssh.enable = true;
+          console.font = "Lat2-Terminus16";
+          console.keyMap = "dvorak";
+          i18n.defaultLocale = "en_US.UTF-8";
+          virtualisation.docker.enable = true;
+          virtualisation.docker.enableOnBoot = true;
+          virtualisation.libvirtd.enable = true;
+          sound.enable = true;
+          services.xserver.enable = true;
+          services.xserver.layout = "dvorak";
+          services.xserver.xkbVariant = "pc102";
+          services.xserver.xkbOptions = "caps:swapescape lv3:ralt_switch";
+          services.xserver.displayManager.lightdm.enable = true;
+          services.xserver.displayManager.defaultSession = "none+i3";
+          services.xserver.desktopManager.xterm.enable = true;
+          services.xserver.windowManager.i3.enable = true;
+          fonts.fontDir.enable = true;
+          fonts.enableGhostscriptFonts = true;
+          fonts.fonts = with pkgs; [
+            corefonts
+            ttf_bitstream_vera
+            emojione
+            noto-fonts
+            noto-fonts-emoji
+            roboto
+            font-awesome-ttf
+          ];
+          fonts.fontconfig.defaultFonts = {
+            serif = [ "Bitstream Vera Sans" "EmojiOne Color" "Font Awesome 5 Free" ];
+            sansSerif = [ "Bitstream Vera Serif" "EmojiOne Color" "Font Awesome 5 Free" ];
+            monospace = [ "Bitstream Vera Sans Mono" "EmojiOne Color" "Font Awesome 5 Free" ];
+          };
+          environment.systemPackages = with pkgs; [
+            curl
+            git
+            nodePackages.bitwarden-cli
+            ntfs3g
+            vim
+            wget
+            apps.nix-top
+          ];
+          environment.pathsToLink = [ "/libexec" ];
+        };
+        wifi = device: {
+          imports = [(import ./modules/wifi { inherit device; })];
+        };
+        users = {
+          imports = [
+            home-manager.nixosModules.home-manager
+            (import ./modules/users/starlord {})
+            (import ./modules/users/rco {})
+          ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
         };
@@ -30,46 +97,10 @@
         system = "x86_64-linux";
         modules =
           [
+            (modules.system "hyperactivitydrive")
+            (modules.wifi "wlo1")
+            modules.users
             ({ pkgs, ... }: {
-              system.stateVersion = "21.11"; # Did you read the comment?
-              system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
-
-              imports = [
-                modules.simux
-                #modules.laptop-hardware
-                modules.not-detected
-                modules.home-manager
-                modules.home-manager-cfg
-              ];
-
-              
-              environment.systemPackages = [
-                (import nix-top { pkgs = legacyPkgs; })
-              ];
-
-              users.users.root.initialHashedPassword = "";
-
-              simux = {
-                users.starlord.enable = true;
-                users.rco.enable = true;
-                wifi.device = "wlo1";
-                wifi.enable = true;
-                workstation.enable = true;
-              };
-
-	      nix.package = pkgs.nixUnstable;
-              nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
-              nix.extraOptions = ''
-                experimental-features = nix-command flakes
-              '';
-
-              networking = {
-                hostName = "hyperactivitydrive";
-                enableIPv6 = true;
-                wireless.interfaces = [ "wlo1" ];
-              };
-
-              # boot.loader.systemd-boot.enable = true;
               boot.loader.grub.enable = true;
               boot.loader.grub.configurationLimit = 2;
               boot.loader.grub.device = "nodev";
@@ -117,98 +148,97 @@
           ];
       };
 
-      nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules =
-          [
-            ({ pkgs, ... }: {
-              # Let 'nixos-version --json' know about the Git revision
-              # of this flake.
-              system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+      #nixosConfigurations.desktop = nixpkgs.lib.nixosSystem {
+      #  system = "x86_64-linux";
+      #  modules =
+      #    [
+      #      ({ pkgs, ... }: {
+      #        # Let 'nixos-version --json' know about the Git revision
+      #        # of this flake.
+      #        system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
 
-              imports = [
-                ./modules
-                "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix"
-                home-manager.nixosModules.home-manager
-                {
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-                }
-              ];
+      #        imports = [
+      #          ./modules
+      #          "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix"
+      #          home-manager.nixosModules.home-manager
+      #          {
+      #            home-manager.useGlobalPkgs = true;
+      #            home-manager.useUserPackages = true;
+      #          }
+      #        ];
 
-              environment.systemPackages = [
-                pkgs.cntr
-              ];
+      #        environment.systemPackages = [
+      #          pkgs.cntr
+      #        ];
 
-              nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
+      #        nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
 
-              # nix.binaryCaches = [ "https://cache.nixos.org" "https://hydra.iohk.io" ];
-              # nix.trustedBinaryCaches = [ "https://hydra.iohk.io" ];
-              # nix.binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
-              nix.requireSignedBinaryCaches = false;
+      #        # nix.binaryCaches = [ "https://cache.nixos.org" "https://hydra.iohk.io" ];
+      #        # nix.trustedBinaryCaches = [ "https://hydra.iohk.io" ];
+      #        # nix.binaryCachePublicKeys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+      #        nix.requireSignedBinaryCaches = false;
 
-              simux = {
-                cuda.enable = false;
-                flakes.enable = true;
-                gaming.enable = false;
-                hydra.enable = false; # broken right now
-                rco.enable = true;
-                users.starlord.enable = true;
-                users.starlord.enableHomeManager = true;
-                workstation.enable = true;
-              };
+      #        simux = {
+      #          cuda.enable = false;
+      #          flakes.enable = true;
+      #          gaming.enable = false;
+      #          hydra.enable = false; # broken right now
+      #          rco.enable = true;
+      #          users.starlord.enable = true;
+      #          users.starlord.enableHomeManager = true;
+      #          workstation.enable = true;
+      #        };
 
-              # For building for raspberry pi
-              #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+      #        # For building for raspberry pi
+      #        #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-              networking = {
-                hostName = "desktop";
-                enableIPv6 = true;
-                interfaces.enp4s0.tempAddress = "enabled";
-                interfaces.enp4s0.useDHCP = true;
-              };
+      #        networking = {
+      #          hostName = "desktop";
+      #          enableIPv6 = true;
+      #          interfaces.enp4s0.tempAddress = "enabled";
+      #        };
 
-              boot = {
-                extraModulePackages = [ ];
-                kernelModules = [ "kvm-amd" ];
-                supportedFilesystems = [ "ntfs" ];
-                loader.grub = {
-                  enable = true;
-                  version = 2;
-                  efiSupport = true;
-                  device = "nodev";
-                  useOSProber = true;
-                  configurationLimit = 2;
-                  efiInstallAsRemovable = true;
-                };
-                initrd = {
-                  availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
-                  kernelModules = [ ];
-                };
-              };
+      #        boot = {
+      #          extraModulePackages = [ ];
+      #          kernelModules = [ "kvm-amd" ];
+      #          supportedFilesystems = [ "ntfs" ];
+      #          loader.grub = {
+      #            enable = true;
+      #            version = 2;
+      #            efiSupport = true;
+      #            device = "nodev";
+      #            useOSProber = true;
+      #            configurationLimit = 2;
+      #            efiInstallAsRemovable = true;
+      #          };
+      #          initrd = {
+      #            availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+      #            kernelModules = [ ];
+      #          };
+      #        };
 
-              fileSystems = {
-                "/" = {
-                  device = "/dev/disk/by-uuid/c1bc882d-b3c6-476a-854e-f061ff0c03ab";
-                  fsType = "ext4";
-                };
+      #        fileSystems = {
+      #          "/" = {
+      #            device = "/dev/disk/by-uuid/c1bc882d-b3c6-476a-854e-f061ff0c03ab";
+      #            fsType = "ext4";
+      #          };
 
-                "/boot" = {
-                  device = "/dev/disk/by-uuid/F38E-40DF";
-                  fsType = "vfat";
-                };
-              };
+      #          "/boot" = {
+      #            device = "/dev/disk/by-uuid/F38E-40DF";
+      #            fsType = "vfat";
+      #          };
+      #        };
 
-              swapDevices = [
-                { device = "/dev/disk/by-uuid/66b5dece-00fa-4597-be57-25463e568631"; }
-              ];
+      #        swapDevices = [
+      #          { device = "/dev/disk/by-uuid/66b5dece-00fa-4597-be57-25463e568631"; }
+      #        ];
 
-              services = {
-                xserver.dpi = 100;
-                xserver.videoDrivers = [ "nvidia" ];
-              };
-            })
-          ];
-      };
+      #        services = {
+      #          xserver.dpi = 100;
+      #          xserver.videoDrivers = [ "nvidia" ];
+      #        };
+      #      })
+      #    ];
+      #};
     };
 }

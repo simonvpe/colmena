@@ -1,12 +1,13 @@
-import ../starlord rec {
+{}: import ../starlord rec {
   username = "rco";
-  extraConfig = { cfg, orig, pkgs }: {
+  extraConfig = { orig, pkgs }: {
     networking.extraHosts = ''
-      10.4.6.96 gitlab.rco.local
-      10.4.6.96 rbx.gitpages.rco.local
-      10.4.6.16 rco-sto-utv01.rco.local
+      10.4.6.96  gitlab.rco.local
+      10.4.6.96  rbx.gitpages.rco.local
+      10.4.6.16  rco-sto-utv01.rco.local
       10.4.7.241 rco-vault01.rco.local
-      10.4.6.94 rco-st118.rco.local
+      10.4.6.94  rco-st118.rco.local
+      10.4.7.245 rco-gitcache-01.rco.local
     '';
     services.resolved.fallbackDns = [ "10.4.6.10" ];
     services.resolved.domains = [ "rco.local" ];
@@ -42,9 +43,12 @@ import ../starlord rec {
     '';
     home-manager.users.${username} = pkgs.lib.recursiveUpdate orig.home-manager.users.${username} {
       home.packages = orig.home-manager.users.${username}.home.packages ++ [
-	(pkgs.callPackage ./vpn.nix { })
+        (pkgs.callPackage ./vpn.nix { })
+        pkgs.teams
       ];
       home.file.".config/nix/nix.conf".source = ./nix.conf;
     };
+    nix.extraOptions = "require-sigs = false";
+    nix.trustedUsers = [ username ];
   };
 }

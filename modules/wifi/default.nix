@@ -1,18 +1,7 @@
-{ config, lib, pkgs, ... }:
-with lib;
-let
-  cfg = config.simux.wifi;
-in
+{ device }:
 {
-  options.simux.wifi = {
-    enable = mkEnableOption "wifi";
-    device = mkOption {
-      type = types.str;
-    };
-  };
-
-  config = mkIf cfg.enable {
-    networking.interfaces.${cfg.device}.useDHCP = true;
+    networking.interfaces.${device}.useDHCP = true;
+    networking.wireless.interfaces = [ device ];
     networking.wireless.enable = true;
     networking.wireless.networks = {
       Cyberlink50.psk = "allyourbasearebelongstous";
@@ -24,5 +13,4 @@ in
       OnePlus3.psk = "pappapappa";
       "513F8F".psk = "c9mior2jcy";
     };
-  };
 }
