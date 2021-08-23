@@ -43,6 +43,7 @@ in
     # TODO:
     # https://github.com/Canop/broot
     #(pkgs.callPackage ../../../apps/koka.nix {})
+    nix-diff
   ];
 
   xsession = {
@@ -261,8 +262,16 @@ in
         background = "\${colors.background}";
         foreground = "\${colors.foreground}";
         modules-left = "i3";
-        modules-right = "battery date";
+        modules-right = "wireless-network battery date";
         module-margin = "5";
+      };
+      "module/wireless-network" = {
+        type = "internal/network";
+        interface = "wlo1";
+        label-connected = "%essid% %downspeed:9%";
+        label-connected-foreground = "#eefafafa";
+        label-disconnected = "not connected";
+        label-disconnected-foreground = "#66ffffff";
       };
       "module/battery" = {
         type = "internal/battery";

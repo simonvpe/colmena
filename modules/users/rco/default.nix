@@ -8,6 +8,9 @@
       10.4.7.241 rco-vault01.rco.local
       10.4.6.94  rco-st118.rco.local
       10.4.7.245 rco-gitcache-01.rco.local
+      10.4.7.242 rco-gitrunner-01.rco.local
+      10.4.7.243 rco-gitrunner-02.rco.local
+      10.4.7.244 rco-gitrunner-03.rco.local
     '';
     services.resolved.fallbackDns = [ "10.4.6.10" ];
     services.resolved.domains = [ "rco.local" ];
@@ -46,9 +49,23 @@
         (pkgs.callPackage ./vpn.nix { })
         pkgs.teams
       ];
-      home.file.".config/nix/nix.conf".source = ./nix.conf;
+      # home.file.".config/nix/nix.conf".source = ./nix.conf;
     };
-    nix.extraOptions = "require-sigs = false";
+    # nix.binaryCaches = [
+    #   "https://cache.nixos.org"
+    #   "http://rco-gitcache-01.rco.local:8099"
+    #   "http://rco-gitrunner-01.rco.local:5000"
+    #   "http://rco-gitrunner-02.rco.local:5000"
+    #   "http://rco-gitrunner-03.rco.local:5000"
+    # ];
+    # nix.trustedBinaryCaches = [
+    #   "https://cache.nixos.org"
+    #   "http://rco-gitcache-01.rco.local:8099"
+    #   "http://rco-gitrunner-01.rco.local:5000"
+    #   "http://rco-gitrunner-02.rco.local:5000"
+    #   "http://rco-gitrunner-03.rco.local:5000"
+    # ];
+    # nix.requireSignedBinaryCaches = false;
     nix.trustedUsers = [ username ];
   };
 }

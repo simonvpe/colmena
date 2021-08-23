@@ -99,6 +99,7 @@
           [
             (modules.system "hyperactivitydrive")
             (modules.wifi "wlo1")
+            #nixos-hardware.nixosModules.asus-zenbook-ux371
             modules.users
             ({ pkgs, ... }: {
               boot.loader.grub.enable = true;
@@ -115,6 +116,18 @@
               boot.initrd.kernelModules = [ ];
               boot.kernelModules = [ "kvm-intel" ];
               boot.extraModulePackages = [ ];
+
+              systemd.services.battery-charge-threshold = {
+                wantedBy = [ "multi-user.target" ];
+                after = [ "multi-user.target" ];
+                description = "Set the battery charge threshold";
+                startLimitBurst = 60;
+                serviceConfig = {
+                  Type = "oneshot";
+                  Restart = "on-failure";
+                  ExecStart = "/bin/sh -c 'echo 80 > /sys/class/power_supply/BAT0/charge_control_end_threshold'";
+                };
+              };
 
               fileSystems."/" = {
                 device = "/dev/disk/by-uuid/506c69ff-c136-4e26-ba53-66f63f14be11";
