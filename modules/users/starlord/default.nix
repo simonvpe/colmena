@@ -3,7 +3,7 @@ let orig = {
     nix.trustedUsers = [ username ];
     users.users.${username} = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "libvirtd" "dialout" ];
+      extraGroups = [ "wheel" "docker" "libvirtd" "dialout" "video" ];
     };
     home-manager.users.${username} = import ./home { inherit config pkgs; };
   };

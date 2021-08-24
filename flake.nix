@@ -99,7 +99,7 @@
           [
             (modules.system "hyperactivitydrive")
             (modules.wifi "wlo1")
-            #nixos-hardware.nixosModules.asus-zenbook-ux371
+            nixos-hardware.nixosModules.asus-zenbook-ux371
             modules.users
             ({ pkgs, ... }: {
               boot.loader.grub.enable = true;
@@ -141,22 +141,23 @@
 
               swapDevices = [ ];
 
-              powerManagement.cpuFreqGovernor = pkgs.lib.mkDefault "powersave";
-
               hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
 
-              services = {
-                xserver.displayManager.sessionCommands = ''
-                  ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
-                    Xcursor.theme: Adwaita
-                    Xcursor.size: 48
-                  EOF
-                '';
-                xserver.dpi = 180;
-                xserver.libinput.enable = true;
-              };
-
-
+              services.xserver.displayManager.sessionCommands = ''
+                ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF
+                  Xcursor.theme: Adwaita
+                  Xcursor.size: 48
+                EOF
+              '';
+              services.xserver.dpi = 180;
+              services.xserver.libinput.enable = true;
+              services.xserver.libinput.mouse.disableWhileTyping = true;
+              services.udev.extraRules = ''
+                ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chgrp video /sys/class/backlight/%k/brightness"
+                ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="intel_backlight", RUN+="${pkgs.coreutils}/bin/chmod g+w /sys/class/backlight/%k/brightness"
+              '';
+              services.thermald.enable = true;
+              powerManagement.cpuFreqGovernor = "powersave";
             })
           ];
       };

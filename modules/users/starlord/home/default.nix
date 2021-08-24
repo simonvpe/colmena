@@ -26,6 +26,7 @@ in
     linuxPackages.perf # performance monitor applications
     nload # show network transfer load
     powerline-fonts # we like fonts
+    siji # An iconic bitmap font based on Stlarch with additional glyphs
     python3Packages.python-gitlab # a cli for gitlab
     ripgrep # like grep, but better
     spotify # music!
@@ -44,17 +45,41 @@ in
     # https://github.com/Canop/broot
     #(pkgs.callPackage ../../../apps/koka.nix {})
     nix-diff
+    font-awesome
   ];
 
-  xsession = {
-    enable = true;
-    windowManager = {
-      i3.enable = true;
-      i3.package = pkgs.i3-gaps;
-      i3.config = null;
-      i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background; };
-    };
-  };
+  xsession =
+     let
+       bl = "/sys/class/backlight/intel_backlight";
+       backlight = {
+         increase = pkgs.writeTextFile {
+	   name = "backlight-increase";
+           executable = true;
+           text =  ''
+             echo USER=$USER
+             echo $(( $(cat ${bl}/brightness) + $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness 
+             cat ${bl}/brightness
+           '';
+         };
+         decrease = pkgs.writeTextFile {
+           name = "backlight-decrease";
+           executable = true;
+           text = ''
+             echo USER=$USER
+             echo $(( $(cat ${bl}/brightness) - $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness 
+             cat ${bl}/brightness
+           '';
+         };
+       };
+     in {
+       enable = true;
+       windowManager = {
+         i3.enable = true;
+         i3.package = pkgs.i3-gaps;
+         i3.config = null;
+         i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background backlight; };
+       };
+     };
 
   programs.git = {
     enable = true;
@@ -228,13 +253,14 @@ in
     enable = true;
   };
 
-  services.polybar = {
+  services.polybar = rec {
     enable = true;
     package = (pkgs.polybar.override {
       i3GapsSupport = true;
       i3 = pkgs.i3-gaps;
       alsaSupport = true;
       githubSupport = true;
+      pulseSupport = true;
     }).overrideAttrs (x: {
       cmakeFlags = (x.cmakeFlags or [ ]) ++ [
         "-DENABLE_I3=ON"
@@ -243,7 +269,7 @@ in
     script = ''
       export PATH=${pkgs.xorg.xrandr}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin:$PATH
       for monitor in $(xrandr --query | grep " connected" | cut -d' ' -f1); do
-        MONITOR=$monitor polybar top &
+        MONITOR=$monitor ${package}/bin/polybar top &
       done
     '';
     config = {
@@ -262,15 +288,47 @@ in
         background = "\${colors.background}";
         foreground = "\${colors.foreground}";
         modules-left = "i3";
-        modules-right = "wireless-network battery date";
+        modules-right = "cpu pulseaudio wireless-network battery backlight date";
         module-margin = "5";
+        font-0 = "Bitstream Vera Serif:pixelsize=20;3";
+        font-1 = "Font Awesome 5 Free:style=regular:pixelsize=20;3";
+        font-2 = "Font Awesome 5 Free:style=solid:pixelsize=20;3";
+        # font-1 = "Font Awesome 5 Free,Font Awesome 5 Free Solid;0";
+        # font-2 = "Font Awesome 5 Free,Font Awesome 5 Free Regular;0";
+        # font-3 = "Font Awesome 5 Free,Font Awesome 5 Free Solid;0";
+        # font-4 = "Font Awesome 5 Brands,Font Awesome 5 Brands Regular;0";
+        # font-5 = "Siji;0";
+      };
+      "module/cpu" = {
+        type = "internal/cpu";
+        interval = "0.5";
+        format = "<label>";
+        label = " %percentage%%";
+      };
+      "module/pulseaudio" = {
+        type = "internal/pulseaudio";
+        sink = "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi___ucm0001.hw_sofhdadsp__sink";
+        use-ui-max = true;
+        interval = 5;
+        format-volume = "<label-volume>";
+        format-muted = "<label-muted>";
+        label-volume = " %percentage%%";
+        label-muted = " 0%";
+      };
+      "module/backlight" = {
+        type = "internal/backlight";
+        card = "intel_backlight";
+        use-actual-brightness = true;
+        enable-scroll = true;
+        format = "<label>";
+        label = " %percentage%%";
       };
       "module/wireless-network" = {
         type = "internal/network";
         interface = "wlo1";
-        label-connected = "%essid% %downspeed:9%";
+        label-connected = " %essid% %downspeed:9%";
         label-connected-foreground = "#eefafafa";
-        label-disconnected = "not connected";
+        label-disconnected = " not connected";
         label-disconnected-foreground = "#66ffffff";
       };
       "module/battery" = {
@@ -282,9 +340,9 @@ in
         format-charging = "<animation-charging> <label-charging>";
         format-discharging = "<animation-discharging> <label-discharging>";
         format-full = "<ramp-capacity> <label-full>";
-        label-charging = "Charging %percentage%%";
-        label-discharging = "Discharging %percentage%%";
-        label-full = "Fully charged";
+        label-charging = "%percentage%%";
+        label-discharging = "%percentage%%";
+        label-full = " Fully charged";
         ramp-capacity-0 = "";
         ramp-capacity-1 = "";
         ramp-capacity-2 = "";
