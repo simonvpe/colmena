@@ -142,6 +142,7 @@
               swapDevices = [ ];
 
               hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
+              hardware.bluetooth.enable = true;
 
               services.xserver.displayManager.sessionCommands = ''
                 ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF

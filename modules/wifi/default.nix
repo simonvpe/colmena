@@ -11,6 +11,7 @@
       OWNIT-5GHz_BE20.psk = "Q72CRXMKP7BXYL"; # Elins
       SW.psk = "#saltyaf";
       OnePlus3.psk = "pappapappa";
-      "513F8F".psk = "c9mior2jcy";
+      #"513F8F".psk = "c9mior2jcy";
+      Bolema.psk = "Split053";
     };
 }

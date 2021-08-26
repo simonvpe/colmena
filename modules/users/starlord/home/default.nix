@@ -57,7 +57,7 @@ in
            executable = true;
            text =  ''
              echo USER=$USER
-             echo $(( $(cat ${bl}/brightness) + $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness 
+             echo $(( $(cat ${bl}/brightness) + $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness
              cat ${bl}/brightness
            '';
          };
@@ -66,7 +66,7 @@ in
            executable = true;
            text = ''
              echo USER=$USER
-             echo $(( $(cat ${bl}/brightness) - $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness 
+             echo $(( $(cat ${bl}/brightness) - $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness
              cat ${bl}/brightness
            '';
          };
@@ -288,16 +288,23 @@ in
         background = "\${colors.background}";
         foreground = "\${colors.foreground}";
         modules-left = "i3";
-        modules-right = "cpu pulseaudio wireless-network battery backlight date";
+        modules-right = "bluetooth cpu pulseaudio wireless-network battery backlight date";
         module-margin = "5";
         font-0 = "Bitstream Vera Serif:pixelsize=20;3";
         font-1 = "Font Awesome 5 Free:style=regular:pixelsize=20;3";
         font-2 = "Font Awesome 5 Free:style=solid:pixelsize=20;3";
-        # font-1 = "Font Awesome 5 Free,Font Awesome 5 Free Solid;0";
-        # font-2 = "Font Awesome 5 Free,Font Awesome 5 Free Regular;0";
-        # font-3 = "Font Awesome 5 Free,Font Awesome 5 Free Solid;0";
-        # font-4 = "Font Awesome 5 Brands,Font Awesome 5 Brands Regular;0";
-        # font-5 = "Siji;0";
+        font-3 = "Font Awesome 5 Brands:style=solid:pixelsize=20;3";
+        font-4 = "Font Awesome 5 Brands:style=regular:pixelsize=20;3";
+      };
+      "module/bluetooth" = let bt = pkgs.callPackage ./bluetooth.nix {}; in {
+        type = "custom/script";
+        exec = "${bt}/bin/polybar-bluetooth.sh";
+        interval = 2;
+        click-left = "exec ${pkgs.blueberry}/bin/blueberry";
+        click-right = "exec ${bt}/bin/toggle-bluetooth.sh";
+        format-padding = "1";
+        format-background = "#000000";
+        format-foreground = "#ffffff";
       };
       "module/cpu" = {
         type = "internal/cpu";
