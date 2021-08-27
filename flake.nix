@@ -129,6 +129,18 @@
                 };
               };
 
+             # systemd.services.monitor-rotation = {
+             #   wantedBy = [ "multi-user.target" ];
+             #   after = [ "multi-user.target" ];
+             #   description = "Rotates the screen given accelerometer inputs";
+             #   startLimitBurst = 60;
+             #   serviceConfig = {
+             #     Type = "simple";
+             #     Restart = "on-failure";
+             #     ExecStart = "${./monitor-sensor.sh} eDP-1";
+             #   };
+             # };
+
               fileSystems."/" = {
                 device = "/dev/disk/by-uuid/506c69ff-c136-4e26-ba53-66f63f14be11";
                 fsType = "ext4";
@@ -143,6 +155,7 @@
 
               hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
               hardware.bluetooth.enable = true;
+              hardware.sensor.iio.enable = true;
 
               services.xserver.displayManager.sessionCommands = ''
                 ${pkgs.xorg.xrdb}/bin/xrdb -merge <<EOF

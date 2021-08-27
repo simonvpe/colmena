@@ -139,7 +139,7 @@ in
       export MANPAGER="sh -c 'col -b | bat -l man -p'"
       export EDITOR=nvim
       eval "$(direnv hook bash)"
-      (cat ~/.cache/wal/sequences &)
+      printf '%s' "$(cat ~/.cache/wal/sequences)"
       source ~/.cache/wal/colors-tty.sh
     '';
     shellAliases = {
@@ -159,16 +159,6 @@ in
     enable = true;
     enableZshIntegration = false;
     enableFishIntegration = false;
-    settings = {
-      prompt_order = [
-        "username"
-        "directory"
-        "git_branch"
-        "kubernetes"
-        "nodejs"
-        "python"
-      ];
-    };
   };
 
   # bat, a cat clone with wings
@@ -406,5 +396,6 @@ in
 
   home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;
   home.file.".xkb/symbols/evorak".source = ./keyboard/evorak;
+  home.file.".config/libinput-gestures.conf".source = pkgs.callPackage ./cfg/libinput.nix {};
   # home.file.".python-gitlab.cfg".source = ./python-gitlab/.python-gitlab.cfg;
 }

@@ -28,6 +28,9 @@
   # Configure libinput
   exec_always --no-startup-id ${pkgs.xorg.xinput}/bin/xinput --set-prop "ASUE140A:00 04F3:3134 Touchpad" "libinput Disable While Typing Enabled" 1
 
+  # Handle screen rotation
+  exec_always --no-startup-id ${./monitor-sensor.sh} eDP-1 'ELAN9008:00 04F3:2BB3 Stylus Pen (0)' 'ELAN9008:00 04F3:2BB3'
+
   # Configure the default keyboard
   exec --no-startup-id ${pkgs.callPackage ../keyboard { }}
 

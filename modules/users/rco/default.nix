@@ -53,14 +53,14 @@
     };
    nix.binaryCaches = [
      "https://cache.nixos.org"
-     "http://rco-gitcache-01.rco.local:8099"
+     # "http://rco-gitcache-01.rco.local:8099"
      # "http://rco-gitrunner-01.rco.local:5000"
      # "http://rco-gitrunner-02.rco.local:5000"
      # "http://rco-gitrunner-03.rco.local:5000"
    ];
    nix.trustedBinaryCaches = [
      "https://cache.nixos.org"
-     "http://rco-gitcache-01.rco.local:8099"
+     # "http://rco-gitcache-01.rco.local:8099"
      # "http://rco-gitrunner-01.rco.local:5000"
      # "http://rco-gitrunner-02.rco.local:5000"
      # "http://rco-gitrunner-03.rco.local:5000"
