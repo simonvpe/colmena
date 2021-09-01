@@ -5,9 +5,12 @@ let
     url = "https://i.redd.it/dy9xn211uo861.jpg";
     sha256 = "0xd1iaddcfryf6q69j4jy2ypbgq09fh5iynw2a2hi7608r48fxk0";
   };
+  inherit (pkgs) callPackage;
 
 in
 {
+  imports = [ ./modules/polybar ];
+
   home.stateVersion = "20.03";
 
   home.packages = with pkgs; [
@@ -241,157 +244,6 @@ in
 
   programs.zathura = {
     enable = true;
-  };
-
-  services.polybar = rec {
-    enable = true;
-    package = (pkgs.polybar.override {
-      i3GapsSupport = true;
-      i3 = pkgs.i3-gaps;
-      alsaSupport = true;
-      githubSupport = true;
-      pulseSupport = true;
-    }).overrideAttrs (x: {
-      cmakeFlags = (x.cmakeFlags or [ ]) ++ [
-        "-DENABLE_I3=ON"
-      ];
-    });
-    script = ''
-      export PATH=${pkgs.xorg.xrandr}/bin:${pkgs.gnugrep}/bin:${pkgs.coreutils}/bin:$PATH
-      for monitor in $(xrandr --query | grep " connected" | cut -d' ' -f1); do
-        MONITOR=$monitor ${package}/bin/polybar top &
-      done
-    '';
-    config = {
-      "colors" = {
-        background = "\${xrdb:color0}";
-        foreground = "\${xrdb:color7}";
-        primary = "\${xrdb:color1}";
-        secondary = "\${xrdb:color2}";
-        alert = "${xrdb:color3}";
-      };
-      "bar/top" = {
-        monitor = "\${env:MONITOR}";
-        width = "100%";
-        height = "1%";
-        radius = 0;
-        background = "\${colors.background}";
-        foreground = "\${colors.foreground}";
-        modules-left = "i3";
-        modules-right = "bluetooth cpu pulseaudio wireless-network battery backlight date";
-        module-margin = "5";
-        font-0 = "Bitstream Vera Serif:pixelsize=20;3";
-        font-1 = "Font Awesome 5 Free:style=regular:pixelsize=20;3";
-        font-2 = "Font Awesome 5 Free:style=solid:pixelsize=20;3";
-        font-3 = "Font Awesome 5 Brands:style=solid:pixelsize=20;3";
-        font-4 = "Font Awesome 5 Brands:style=regular:pixelsize=20;3";
-      };
-      "module/bluetooth" = let bt = pkgs.callPackage ./bluetooth.nix {}; in {
-        type = "custom/script";
-        exec = "${bt}/bin/polybar-bluetooth.sh";
-        interval = 2;
-        click-left = "exec ${pkgs.blueberry}/bin/blueberry";
-        click-right = "exec ${bt}/bin/toggle-bluetooth.sh";
-        format-padding = "1";
-        format-background = "#000000";
-        format-foreground = "#ffffff";
-      };
-      "module/cpu" = {
-        type = "internal/cpu";
-        interval = "0.5";
-        format = "<label>";
-        label = " %percentage%%";
-      };
-      "module/pulseaudio" = {
-        type = "internal/pulseaudio";
-        sink = "alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi___ucm0001.hw_sofhdadsp__sink";
-        use-ui-max = true;
-        interval = 5;
-        format-volume = "<label-volume>";
-        format-muted = "<label-muted>";
-        label-volume = " %percentage%%";
-        label-muted = " 0%";
-      };
-      "module/backlight" = {
-        type = "internal/backlight";
-        card = "intel_backlight";
-        use-actual-brightness = true;
-        enable-scroll = true;
-        format = "<label>";
-        label = " %percentage%%";
-      };
-      "module/wireless-network" = {
-        type = "internal/network";
-        interface = "wlo1";
-        label-connected = " %essid% %downspeed:9%";
-        label-connected-foreground = "#eefafafa";
-        label-disconnected = " not connected";
-        label-disconnected-foreground = "#66ffffff";
-      };
-      "module/battery" = {
-        type = "internal/battery";
-        full-at = "99";
-        battery = "BAT0";
-        adapter = "AC0";
-        poll-interval = "5";
-        format-charging = "<animation-charging> <label-charging>";
-        format-discharging = "<animation-discharging> <label-discharging>";
-        format-full = "<ramp-capacity> <label-full>";
-        label-charging = "%percentage%%";
-        label-discharging = "%percentage%%";
-        label-full = " Fully charged";
-        ramp-capacity-0 = "";
-        ramp-capacity-1 = "";
-        ramp-capacity-2 = "";
-        ramp-capacity-3 = "";
-        ramp-capacity-4 = "";
-        bar-capacity-width = "10";
-        animation-charging-0 = "";
-        animation-charging-1 = "";
-        animation-charging-2 = "";
-        animation-charging-3 = "";
-        animation-charging-4 = "";
-        animation-charging-framerate = "750";
-        animation-discharging-0 = "";
-        animation-discharging-1 = "";
-        animation-discharging-2 = "";
-        animation-discharging-3 = "";
-        animation-discharging-4 = "";
-        animation-discharging-framerate = "500";
-      };
-      "module/date" = {
-        type = "internal/date";
-        interval = 1;
-        date = "%Y-%m-%d";
-        time = "%H:%M:%S";
-        label = "%date% %time%";
-      };
-      "module/i3" = {
-        type = "internal/i3";
-        pin-workspaces = true;
-        strip-wsnumbers = true;
-        index-sort = true;
-        enable-click = false;
-        enable-scroll = false;
-        wrapping-scroll = false;
-        reverse-scroll = false;
-        fuzzy-match = true;
-        format = "<label-state> <label-mode>";
-        label-mode = "%mode%";
-        label-mode-padding = 2;
-        label-mode-background = "#e60053";
-        label-focused = "%index%";
-        label-focused-foreground = "\${colors.secondary}";
-        label-focused-background = "\${colors.background}";
-        label-focused-underline = "\${colors.primary}";
-        label-focused-padding = 0;
-        label-unfocused = "%index%";
-        label-unfocused-padding = 0;
-        label-separator = "|";
-        label-separator-padding = 1;
-        label-separator-foreground = "\${colors.primary}";
-      };
-    };
   };
 
   home.file.".xkb/symbols/svorak".source = ./keyboard/svorak;

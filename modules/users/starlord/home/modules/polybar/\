@@ -1,0 +1,98 @@
+{ config
+, callPackage
+, blueberry
+, pulseaudio
+, polybar
+, gnugrep
+, coreutils
+, polybar-bluetooth ? callPackage ./bluetooth.nix {}
+}:
+
+rec {
+  enable = true;
+  package = callPackage ./package.nix {};
+  script = ''
+    export PATH=${xorg.xrandr}/bin:${gnugrep}/bin:${coreutils}/bin:$PATH
+    for monitor in $(xrandr --query | grep " connected" | cut -d' ' -f1); do
+      MONITOR=$monitor ${package}/bin/polybar top &
+    done
+  '';
+  config = {
+    "colors" = {
+      background = "\${xrdb:color0}";
+      foreground = "\${xrdb:color7}";
+      primary = "\${xrdb:color1}";
+      secondary = "\${xrdb:color2}";
+      alert = "${xrdb:color3}";
+    };
+    "bar/top" = {
+      monitor = "\${env:MONITOR}";
+      width = "100%";
+      height = "1%";
+      radius = 0;
+      background = "\${colors.background}";
+      foreground = "\${colors.foreground}";
+      modules-left = "i3";
+      modules-right = "bluetooth cpu pulseaudio wireless-network battery backlight date";
+      module-margin = "5";
+      font-0 = "Bitstream Vera Serif:pixelsize=20;3";
+      font-1 = "Font Awesome 5 Free:style=regular:pixelsize=20;3";
+      font-2 = "Font Awesome 5 Free:style=solid:pixelsize=20;3";
+      font-3 = "Font Awesome 5 Brands:style=solid:pixelsize=20;3";
+      font-4 = "Font Awesome 5 Brands:style=regular:pixelsize=20;3";
+    };
+    "module/bluetooth" = callPackage ./bluetooth.nix {};
+    "module/cpu" = callPackage ./cpu.nix {};
+    "module/pulseaudio" = callPackage ./pulseaudio.nix {};
+    "module/backlight" = callPackage ./backlight.nix {};
+    "module/wireless-network" = callPackage ./wireless-network.nix {};
+    "module/battery" = callPackage ./battery.nix {};
+    "module/date" = callPackage ./date.nix {};
+    "module/i3" = callPackage ./i3.nix {};
+    "module/i3-touch" = callPackage ./i3-touch.nix {};
+    "module/backlight-touch" = callPackage ./backlight-touch.nix {};
+    "module/touchbrightdown" = {
+      type = "custom/text";
+      content = "  ";
+      content-foreground = "#fff";
+      click-left = "xbacklight -dec 10";
+    };
+    "module/touchbrightup" = {
+      type = "custom/text";
+      content = "    ";
+      content-foreground = "#fff";
+      click-left = "xbacklight -inc 10";
+    };
+    "module/touchkeyboard" = {
+      type = "custom/text";
+      content = "   ";
+      content-foreground = "#fff";
+      click-left= "${dbus}/bin/dbus-send --type=method_call --print-reply --dest=org.onboard.Onboard /org/onboard/Onboard/Keyboard org.onboard.Onboard.Keyboard.ToggleVisible";
+    };
+    # "module/touchredraw" = {
+    #   type = "custom/text";
+    #   content = "    ";
+    #   content-foreground = "#fff";
+    #   click-left = "i3-msg 'restart'";
+    # };
+    "module/touchvolmute" = {
+      type = "custom/text";
+      content = "  ";
+      content-foreground = "#fff";
+      click-left = "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+    };
+    "module/touchvoldown" = {
+      type = "custom/text";
+      content = "  ";
+      content-foreground = "#fff";
+      click-left = "pactl set-sink-volume @DEFAULT_SINK@ -5%";
+    };
+    "module/touchvolup" = {
+      type = "custom/text";
+      content = "    ";
+      content-foreground = "#fff";
+      click-left = "pactl set-sink-volume @DEFAULT_SINK@ +5%";
+    };
+  };
+};
+
