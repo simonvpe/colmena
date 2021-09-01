@@ -1,4 +1,4 @@
-{ xorg }:
+{ light }:
 {
   "module/backlight" = {
     type = "internal/backlight";
@@ -12,12 +12,12 @@
     type = "custom/text";
     content = "  ";
     content-foreground = "#fff";
-    click-left = "${xorg.xbacklight}/bin/xbacklight -dec 10";
+    click-left = "${light}/bin/light -U 10";
   };
   "module/backlight-touch-up" = {
     type = "custom/text";
     content = "    ";
     content-foreground = "#fff";
-    click-left = "${xorg.xbacklight}/bin/xbacklight -inc 10";
+    click-left = "${light}/bin/light -A 10";
   };
 }

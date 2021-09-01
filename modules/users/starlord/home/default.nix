@@ -51,38 +51,15 @@ in
     font-awesome
   ];
 
-  xsession =
-     let
-       bl = "/sys/class/backlight/intel_backlight";
-       backlight = {
-         increase = pkgs.writeTextFile {
-	   name = "backlight-increase";
-           executable = true;
-           text =  ''
-             echo USER=$USER
-             echo $(( $(cat ${bl}/brightness) + $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness
-             cat ${bl}/brightness
-           '';
-         };
-         decrease = pkgs.writeTextFile {
-           name = "backlight-decrease";
-           executable = true;
-           text = ''
-             echo USER=$USER
-             echo $(( $(cat ${bl}/brightness) - $(cat ${bl}/max_brightness) / 10 )) > ${bl}/brightness
-             cat ${bl}/brightness
-           '';
-         };
-       };
-     in {
-       enable = true;
-       windowManager = {
-         i3.enable = true;
-         i3.package = pkgs.i3-gaps;
-         i3.config = null;
-         i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background backlight; };
-       };
+  xsession = {
+     enable = true;
+     windowManager = {
+       i3.enable = true;
+       i3.package = pkgs.i3-gaps;
+       i3.config = null;
+       i3.extraConfig = import ./cfg/i3.nix { inherit config pkgs background; };
      };
+   };
 
   programs.git = {
     enable = true;

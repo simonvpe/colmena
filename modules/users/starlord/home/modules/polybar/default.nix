@@ -21,28 +21,16 @@ in
     '';
 
     config =
-    (import ./backlight.nix { inherit (pkgs) xorg; }) //
-    (import ./battery.nix {}) //
-    (import ./bluetooth.nix { inherit (pkgs) fetchgit bluez blueberry; }) //
-    (import ./colors.nix {}) //
-    (import ./cpu.nix {}) //
-    (import ./i3.nix {}) //
-    (import ./pulseaudio.nix {}) //
-    (import ./top-bar.nix {}) //
-    (import ./wireless-network.nix {})
-    ;
-
-      # lib.foldr (lhs: rhs: lhs // rhs) {} (map (x: callPackage x {}) [
-      # ./backlight.nix
-      # ./battery.nix
-      # ./bluetooth.nix
-      # ./colors.nix
-      # ./cpu.nix
-      # ./i3.nix
-      # ./pulseaudio.nix
-      # ./top-bar.nix
-      # ./wireless-network.nix
-    # ]);
+      (import ./backlight.nix { inherit (pkgs) light; }) //
+      (import ./battery.nix {}) //
+      (import ./bluetooth.nix { inherit (pkgs) fetchgit bluez blueberry; }) //
+      (import ./colors.nix {}) //
+      (import ./cpu.nix {}) //
+      (import ./date.nix {}) //
+      (import ./i3.nix {}) //
+      (import ./pulseaudio.nix {}) //
+      (import ./top-bar.nix {}) //
+      (import ./wireless-network.nix {});
   };
 }
 
