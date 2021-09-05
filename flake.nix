@@ -79,7 +79,6 @@
           imports = [
             home-manager.nixosModules.home-manager
             (import ./modules/users/starlord {})
-            (import ./modules/users/rco {})
           ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

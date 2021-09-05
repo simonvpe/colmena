@@ -4,7 +4,8 @@
     networking.wireless.interfaces = [ device ];
     networking.wireless.enable = true;
     networking.wireless.networks = {
-      Cyberlink50.psk = "allyourbasearebelongstous";
+      #Cyberlink50.psk = "allyourbasearebelongstous";
+      Cyberlink24.psk = "allyourbasearebelongstous";
       Strandhyddan.psk = "8972524000";
       RCO.psk = "logonrcowlan";
       Finkontoret.psk = "strosaitrosa";
