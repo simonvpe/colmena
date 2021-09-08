@@ -12,14 +12,6 @@ in
   options.services.vpn.package = mkOption {
       type = types.package;
       default = openfortivpn;
-      # default = openfortivpn.overrideAttrs (original: {
-      #   src = fetchFromGitHub {
-      #     owner = "awidegreen";
-      #     repo = "openfortivpn";
-      #     rev = "master";
-      #     sha256 = "18gm5757njmd52vdia8wghw4yazr931gg52i6rsbnxz42jscwr7f";
-      #   };
-      # });
   };
 
   options.services.vpn.pppdIFName = mkOption {
@@ -32,34 +24,15 @@ in
     default = "/tmp/cfg";
   };
 
-  # options.services.vpn.username = mkOption {
-  #   type = types.str;
-  # };
-
   options.services.vpn.configFile = mkOption {
     type = types.str;
     description = "The openfortivpn config to use";
   };
 
-  # options.services.vpn.vpnUsername = mkOption {
-  #   type = types.path;
-  #   description = "A script to execute to retrieve the VPN username";
-  # };
-
-  # options.services.vpn.vpnHost = mkOption {
-  #   type = types.path;
-  #   description = "A script to execute to retrieve the VPN host";
-  # };
-
   options.services.vpn.timeoutSec = mkOption {
     type = types.int;
     default = 100;
   };
-
-  # options.services.vpn.vpnPassword = mkOption {
-  #   type = types.path;
-  #   description = "A script to execute to retrieve the VPN password";
-  # };
 
   config = {
     # home.packages = [ cfg.package ];

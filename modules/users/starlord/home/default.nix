@@ -97,9 +97,7 @@ in
     enableSshSupport = true;
   };
 
-  #   programs.home-manager = {
-  #     enable = true;
-  #   };
+  programs.home-manager.enable = true;
 
   programs.bash = {
     enable = true;
@@ -107,7 +105,7 @@ in
       # use bat as man pager for some colors
       export MANPAGER="sh -c 'col -b | bat -l man -p'"
       export EDITOR=nvim
-      eval "$(direnv hook bash)"
+      export TERM=vt100
       printf '%s' "$(cat ~/.cache/wal/sequences)"
       source ~/.cache/wal/colors-tty.sh
     '';
