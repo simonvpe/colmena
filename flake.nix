@@ -1,7 +1,7 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.home-manager.url = "github:nix-community/home-manager/release-21.05";
-  inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+  inputs.nixos-hardware.url = "github:simonvpe/nixos-hardware/asus-zenbook-ux371";
   inputs.nix-top.url = "github:samueldr/nix-top/v0.2.0";
   inputs.nix-top.flake = false;
 
@@ -11,7 +11,7 @@
         nix-top = import nix-top { pkgs = legacyPkgs; };
       };
       modules = {
-        system = hostname: { pkgs, ... }: {
+        system = hostname: wg-ips: { pkgs, ... }: {
           imports = [
             "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix"
           ];
@@ -26,6 +26,32 @@
           networking.enableIPv6 = true;
           networking.useNetworkd = true;
           networking.useDHCP = false; # cannot be used together with networkd
+
+          # Determines the IP address and subnet of the client's end of the tunnel interface.
+          networking.wireguard.interfaces.wg0.ips = wg-ips;
+          # To match firewall allowedUDPPorts (without this wg uses random port numbers).
+          networking.firewall.allowedUDPPorts = [ 51820 ];
+          networking.wireguard.interfaces.wg0.listenPort = 51820;
+          # Key file stored locally on each machine, this has to be manually created.
+          networking.wireguard.interfaces.wg0.privateKeyFile = "/etc/wireguard-keys/private";
+          # For a client configuration, one peer entry for the server will suffice.
+          networking.wireguard.interfaces.wg0.peers = [
+            {
+              # Public key of the server.
+              publicKey = "dZH9BuC/1iVguJ+Fz0+vTc0NXklLkBGX00laM4TEJHE=";
+              # Forward only this subnet via VPN.
+              allowedIPs = [
+                "10.200.0.0/22"
+                "172.16.32.0/24"
+                "172.16.33.0/24"
+              ];
+              # This is the server.
+              endpoint = "109.104.14.127:51820";
+              # Send keepalives every 25 seconds to keep NAT tables alive.
+              persistentKeepalive = 25;
+            }
+          ];
+
           time.timeZone = "Europe/Stockholm";
           hardware.pulseaudio.enable = true;
           hardware.opengl.driSupport32Bit = true;
@@ -78,7 +104,8 @@
         users = {
           imports = [
             home-manager.nixosModules.home-manager
-            (import ./modules/users/starlord {})
+            ./modules/users/starlord
+            ./modules/users/neti
           ];
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -96,7 +123,7 @@
         system = "x86_64-linux";
         modules =
           [
-            (modules.system "hyperactivitydrive")
+            (modules.system "hyperactivitydrive" [ "10.200.0.2/24" ])
             (modules.wifi "wlo1")
             nixos-hardware.nixosModules.asus-zenbook-ux371
             modules.users

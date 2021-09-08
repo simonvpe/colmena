@@ -1,10 +1,7 @@
-{ username ? "starlord", extraConfig ? _: {} }: { config, pkgs, ... }:
-let orig = {
-    nix.trustedUsers = [ username ];
-    users.users.${username} = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" "docker" "libvirtd" "dialout" "video" ];
-    };
-    home-manager.users.${username} = import ./home { inherit config pkgs; };
-  };
-in orig // (extraConfig { inherit orig pkgs; })
+{ config, pkgs, ... }:
+{
+  nix.trustedUsers = [ "starlord" ];
+  users.users.starlord.isNormalUser = true;
+  users.users.starlord.extraGroups = [ "wheel" "docker" "libvirtd" "dialout" "video" ];
+  home-manager.users.starlord = import ./home { inherit config pkgs; };
+}

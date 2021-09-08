@@ -1,4 +1,4 @@
-{ config, pkgs }:
+{ config, pkgs, ... }:
 let
   # chitubox = pkgs.callPackage ./apps/chitubox.nix { };
   background = pkgs.fetchurl {
@@ -14,41 +14,26 @@ in
   home.stateVersion = "20.03";
 
   home.packages = with pkgs; [
-    #chitubox
-    alacritty # Needed for the screensaver
-    cmatrix # matrix stuff for thelock screen
-    #cq-editor # cadquery, CAD software
-    direnv
-    #discord
+    discord
     docker
     fd # like find but better
+    font-awesome
     google-cloud-sdk # GCP CLI
-    googler # Googles in the console
     iftop # shows active network connections
     jq # like sed for json
+    krita # painting
     linuxPackages.perf # performance monitor applications
+    nix-diff
     nload # show network transfer load
     powerline-fonts # we like fonts
-    siji # An iconic bitmap font based on Stlarch with additional glyphs
-    python3Packages.python-gitlab # a cli for gitlab
     ripgrep # like grep, but better
+    siji # An iconic bitmap font based on Stlarch with additional glyphs
     spotify # music!
     strace # trace what applications do
     sysstat # sar and more
     tree # a nice util to show file trees
-    #tuir               # terminal UI for reddit
     up # A tool for writing Linux pipes with instant live preview
-    xautolock # automatic lock screen
     xorg.xkbcomp # needed for custom keyboard maps
-    xtrlock-pam # a simple lock screen
-    krita
-
-    irssi # irc
-    # TODO:
-    # https://github.com/Canop/broot
-    #(pkgs.callPackage ../../../apps/koka.nix {})
-    nix-diff
-    font-awesome
   ];
 
   xsession = {
@@ -73,7 +58,11 @@ in
   };
 
   programs.bash = {
-    bashrcExtra = "";
+    bashrcExtra = ''
+      if [ -f ~/.bashrc-custom ]; then
+        source ~/.bashrc-custom
+      fi
+    '';
   };
 
   programs.termite = {

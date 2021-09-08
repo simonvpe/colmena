@@ -45,6 +45,8 @@
 
   # Use Mouse+$mod to drag floating windows to their wanted position
   floating_modifier $mod
+  floating_minimum_size 75 x 50
+  floating_maximum_size 1920 x 1080
 
   # start a terminal
   bindsym $mod+Return exec ${pkgs.termite}/bin/termite
