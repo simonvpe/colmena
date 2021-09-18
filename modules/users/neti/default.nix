@@ -20,7 +20,6 @@
   home-manager.users.neti.home.packages = with pkgs; [ teams qtcreator ];
   home-manager.users.neti.programs.vscode.enable = true;
   home-manager.users.neti.programs.vscode.package = pkgs.vscode-fhs;
-  home-manager.users.neti.programs.ssh.enable = true;
   home-manager.users.neti.programs.ssh.extraConfig = "Include ~/.ssh/config.neti";
   home-manager.users.neti.services.vpn.configFile = "~/.config/vpn";
 

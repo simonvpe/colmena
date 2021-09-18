@@ -15,6 +15,10 @@
           imports = [
             "${nixpkgs.outPath}/nixos/modules/installer/scan/not-detected.nix"
           ];
+          nixpkgs.overlays = [
+            (import ./fixes/python-packages/pyroma.nix)
+            (import ./fixes/python-packages/flake8.nix)
+          ];
           system.stateVersion = "21.11";
           system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
           users.users.root.initialHashedPassword = "";
@@ -22,6 +26,7 @@
           nix.package = pkgs.nixUnstable;
           nix.sandboxPaths = [ "/bin/sh=${pkgs.bash}/bin/sh" ];
           nix.extraOptions = "experimental-features = nix-command flakes";
+          nix.registry.nixpkgs.flake = nixpkgs;
           networking.hostName = hostname;
           networking.enableIPv6 = true;
           networking.useNetworkd = true;
@@ -55,6 +60,7 @@
           time.timeZone = "Europe/Stockholm";
           hardware.pulseaudio.enable = true;
           hardware.opengl.driSupport32Bit = true;
+          services.resolved.dnssec = "false";
           services.openssh.enable = true;
           console.font = "Lat2-Terminus16";
           console.keyMap = "dvorak";
@@ -97,6 +103,11 @@
             apps.nix-top
           ];
           environment.pathsToLink = [ "/libexec" ];
+
+          nix.nixPath = [
+            "repl=${toString ./.}/repl.nix"
+            "nixpkgs=${nixpkgs}"
+          ];
         };
         wifi = device: {
           imports = [(import ./modules/wifi { inherit device; })];
