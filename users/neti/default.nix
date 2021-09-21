@@ -37,6 +37,12 @@
         group = "users";
         mode = "0400";
       };
+      "neti/id_ed25519.pass" = {
+        file = "${self}/secrets/neti/id_ed25519.pass.age";
+        owner = "neti";
+        group = "users";
+        mode = "0400";
+      };
     };
   };
 

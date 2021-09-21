@@ -17,4 +17,5 @@ in
   "neti/ssh.config.age".publicKeys = [ neti ];
   "neti/id_ed25519.neti.age".publicKeys = [ neti ];
   "neti/id_ed25519.neti.pub.age".publicKeys = [ neti ];
+  "neti/id_ed25519.pass.age".publicKeys = [ neti ];
 }

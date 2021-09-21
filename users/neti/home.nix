@@ -7,4 +7,7 @@
   config.services.openforti-vpn.configFile = "/run/secrets/neti/vpn.config";
   config.programs.teams.enable = true;
   config.programs.qtcreator.enable = true;
+  config.services.ssh-agent.enable = true;
+  config.services.ssh-agent.keyFiles = [ "/run/secrets/neti/id_ed25519.pass:/run/secrets/neti/id_ed25519.neti" ];
+  config.systemd.user.startServices = true;
 }
