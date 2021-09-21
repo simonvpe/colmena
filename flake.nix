@@ -149,7 +149,7 @@
                 web
               ];
               starlord = base ++ [ steam ./users/starlord/home.nix ];
-              neti = base ++ [ ./users/neti/home.nix ];
+              neti = base ++ [ vscode ./users/neti/home.nix ];
             };
           };
           users = {
