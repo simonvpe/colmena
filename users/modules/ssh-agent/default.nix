@@ -15,7 +15,7 @@ in
       type = listOf str;
     };
 
-    services.ssh-agent.bashIntegration = mkOption {
+    services.ssh-agent.enableBashIntegration = mkOption {
       type = bool;
       default = true;
     };
@@ -55,16 +55,14 @@ in
 
         };
         Install = {
-          WantedBy = [ "multi-user.target" ];
+          WantedBy = [ "default.target" ];
         };
       };
 
-      pam.sessionVariables = { inherit SSH_AUTH_SOCK; };
+      home.sessionVariables = { inherit SSH_AUTH_SOCK; };
     })
-    (mkIf (cfg.enable && cfg.bashIntegration) {
-      # TODO: not sure about ~/.profile ~/.pam-environment ~/.bashrc
-      programs.bash.sessionVariables = { inherit SSH_AUTH_SOCK; };
-      programs.bash.bashrcExtra = ''export SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"'';
+    (mkIf (cfg.enable && cfg.enableBashIntegration) {
+      programs.bash.initExtra = ''export SSH_AUTH_SOCK="${SSH_AUTH_SOCK}"'';
     })
   ];
 }
