@@ -23,6 +23,7 @@ in
       htop
       iputils
       jq
+      lsof
       manix
       moreutils
       nix-index
