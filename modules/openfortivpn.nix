@@ -5,8 +5,8 @@
 }:
 let
   cfg = config.services.openfortivpn;
-  inherit (lib) mkEnableOption mkOption mkIf genAttrs mkMerge mapAttrs concatLists last toList imap optionalString mkDefault;
-  inherit (lib.types) listOf str submodule attrsOf int bool ints;
+  inherit (lib) mkEnableOption mkOption mkIf genAttrs mkMerge mapAttrs concatLists last toList imap optionalString mkDefault types;
+  inherit (lib.types) listOf nonEmptyStr submodule attrsOf int bool ints either port path nullOr;
   inherit (pkgs) openfortivpn systemd bash writeScript crudini writeText coreutils;
   inherit (builtins) toString replaceStrings;
 
@@ -18,7 +18,7 @@ let
       enable = mkEnableOption "openfortivpn";
 
       users = mkOption {
-        type = listOf str;
+        type = listOf nonEmptyStr;
         description = ''
           Start the service when one of the given users log in.
         '';
@@ -26,7 +26,7 @@ let
       };
 
       configPath = mkOption {
-        type = str;
+        type = path;
         description = ''
           A path on disk containing a configuration file. This will override any of the
           options. Use this to point to a config with your secret password and hostname.
@@ -35,28 +35,28 @@ let
       };
 
       host = mkOption {
-        type = str;
+        type = nonEmptyStr;
         default = "hostname";
         description = "The hostname of the forti VPN server";
       };
 
       port = mkOption {
-        type = ints.positive;
+        type = port;
         default = 443;
       };
 
       username = mkOption {
-        type = str;
+        type = nonEmptyStr;
         default = "username";
       };
 
       password = mkOption {
-        type = str;
+        type = nonEmptyStr;
         default = "password";
       };
 
       pppd-ifname = mkOption {
-        type = str;
+        type = nonEmptyStr;
         default = "pppd%i";
       };
 
@@ -64,6 +64,15 @@ let
         type = bool;
         default = true;
         description = "If possible use resolvconf to update /etc/resolv.conf";
+      };
+
+      persistent = mkOption {
+        type = nullOr ints.positive;
+        description = ''
+          Run the vpn persistently in a loop and try to reconnect every <interval>
+          seconds when dropping out.
+        '';
+        default = null;
       };
 
       timeout = mkOption {
@@ -80,6 +89,10 @@ let
     default = [ ];
   };
 
+  # it is complicated and hacky to get openfortivpn running as a user, even with
+  # setuid wrappers etc. this system service controls the vpn and in turn a user
+  # service controls the system service with systemctl, by allowing management of
+  # the service using polkit.
   mkServices =
     let
       fn = i: args:
@@ -93,6 +106,7 @@ let
             password = ${args.password}
             use-resolvconf = ${if args.use-resolvconf then "1" else "0"}
             pppd-ifname = ${ifname}
+            ${optionalString (args.persistent != null) "persistent = ${toString args.persistent}"}
           '';
           gen-config = writeScript "openfortivpn-generate-config " ''
             #!${bash}/bin/bash
@@ -116,6 +130,7 @@ let
             reloadIfChanged = false;
             serviceConfig = {
               Type = "exec";
+              Restart = "always";
               TimeoutSec = toString args.timeout;
               Environment = [ "CONFIG=%t/${servicename i}.conf" ];
               ExecStartPre = gen-config;
@@ -127,6 +142,7 @@ let
     in
     imap fn;
 
+  # these polkit rules allows the user to manage the system service
   mkPolkitRules =
     let
       polkitConfig = i: user: {
@@ -144,6 +160,7 @@ let
     in
     imap fn;
 
+  # a home-manager service is used to control the life cycle of the system service
   mkHomeManagerActivations =
     let
       hmConfig = i: user: {

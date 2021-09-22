@@ -50,5 +50,6 @@
     enable = true;
     configPath = "/run/secrets/neti/vpn.config";
     users = [ "neti" ];
+    persistent = 5;
   }];
 }
