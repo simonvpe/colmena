@@ -4,12 +4,13 @@
 , ...
 }:
 let
+  cfg = config.services.openfortivpn;
   inherit (lib) mkEnableOption mkOption mkIf genAttrs mkMerge mapAttrs concatLists last toList imap optionalString mkDefault;
   inherit (lib.types) listOf str submodule attrsOf int bool ints;
-  inherit (pkgs) openfortivpn systemd bash writeScript crudini writeText;
-  inherit (builtins) toString;
+  inherit (pkgs) openfortivpn systemd bash writeScript crudini writeText coreutils;
+  inherit (builtins) toString replaceStrings;
 
-  servicename = "openfortivpn@";
+  servicename = i: "openfortivpn-${toString i}";
 
   openfortivpnOptions = { ... }: {
     options = {
@@ -79,121 +80,102 @@ let
     default = [ ];
   };
 
-  template = {
-    services."${servicename}" = {
-      serviceConfig = {
-        Type = "exec";
-        Restart = "always";
-        ExecStart = writeScript "openfortivpn" ''
-          #!${bash}/bin/bash
-          ${openfortivpn}/bin/openfortivpn -c $CONFIG >&2
-        '';
-      };
-    };
-  };
-
-  mkServiceConf = i: args@{ enable, ... }:
+  mkServices =
     let
-      mkOverrideConf = args:
+      fn = i: args:
         let
+          ifname = replaceStrings [ "%i" ] [ (toString i) ] args.pppd-ifname;
           disable-dnssec = args.use-resolvconf && config.networking.useNetworkd;
-          defaultConfig = args: writeText "openfortivpn-default-config" ''
+          defaultConfig = writeText "openfortivpn-default-config " ''
             host = ${args.host}
             port = ${toString args.port}
             username = ${args.username}
             password = ${args.password}
             use-resolvconf = ${if args.use-resolvconf then "1" else "0"}
+            pppd-ifname = ${ifname}
           '';
-          gen-config = writeScript "openfortivpn-generate-config" ''
+          gen-config = writeScript "openfortivpn-generate-config " ''
             #!${bash}/bin/bash
             set -x
-            install -m0600 ${defaultConfig args} $IFNAME
-            ${crudini}/bin/crudini --merge $CONFIG "" <<< "pppd-ifname = $IFNAME"
+            install -m0600 ${defaultConfig} $CONFIG
             ${crudini}/bin/crudini --merge $CONFIG "" < ${args.configPath}
           '';
           resolvconf-hack = writeScript "openfortivpn-resolvconf-hack" ''
             #!${bash}/bin/bash
             set -x
-            while ! test -d "/sys/class/net/$IFNAME"; do
-              echo "waiting for $IFNAME" >&2
+            while ! test -d "/sys/class/net/${ifname}"; do
+              echo "waiting for ${ifname}" >&2
               sleep 1
             done
-            ${systemd}/bin/resolvectl dnssec $IFNAME false
+            ${systemd}/bin/resolvectl dnssec ${ifname} false
             ${systemd}/bin/resolvectl reset-server-features
           '';
         in
-        writeText "override.conf" ''
-          [Service]
-          User=root
-          PrivateTmp=no
-          TimeoutSec=${toString args.timeout}
-          Environment=IFNAME=${args.pppd-ifname}
-          Environment=CONFIG=%t/openfortivpn-${toString i}.conf
-          ExecStartPre=${gen-config}
-          ExecStartPost=${optionalString disable-dnssec resolvconf-hack}
-        '';
-      mkSocketConf =
-        writeText "${servicename}${toString i}.socket" ''
-          [Socket]
-          ListenStream=%t/${servicename}${toString i}.sock
-        '';
-    in
-    mkIf enable {
-      packages = toList (pkgs.runCommandNoCC "${servicename}${toString i}"
         {
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-        } ''
-        mkdir -p $out/etc/systemd/system/ && cd $_
-        ln -s /etc/systemd/system/${servicename}.service ${servicename}${toString i}.service
-        ln -s ${mkSocketConf} ${servicename}${toString i}.socket
-        mkdir -p ${servicename}${toString 1}.service.d && cd $_
-        cp ${mkOverrideConf args} override.conf
-      '');
-      # targets.network-online.wants = [ "${servicename}${toString i}.service" ];
-    };
-
-  #mkUserServiceConfs = i: args: {
-  #  user.services."openfortivpn-user-${toString i}" = {
-  #    serviceConfig = rec {
-  #      Type = "forking";
-  #      # PIDFile = "$TMP/openfortivpn-${toString i}.pid";
-  #      Environment = [
-  #        "TMP=$XDG_RUNTIME_DIR";
-  #        "SVC=${servicename}${toString i}.service"
-  #      ];
-  #      ExecStart = writeScript "openfortivpn-user-start" ''
-  #        #!${bash}/bin/bash
-  #        set -o errexit
-  #        systemctl start $SVC
-  #        systemctl show --property MainPID --value $SVC > ${PIDFile}
-  #      '';
-  #      ExecStop = "systemctl stop $SVC";
-  #    };
-  #  };
-  #};
+          services."${servicename i}" = {
+            reloadIfChanged = false;
+            serviceConfig = {
+              Type = "exec";
+              TimeoutSec = toString args.timeout;
+              Environment = [ "CONFIG=%t/${servicename i}.conf" ];
+              ExecStartPre = gen-config;
+              ExecStart = "${openfortivpn}/bin/openfortivpn -c $CONFIG";
+              ExecStartPost = optionalString disable-dnssec resolvconf-hack;
+            };
+          };
+        };
+    in
+    imap fn;
 
   mkPolkitRules =
-    let fn = i: user: ''
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.freedesktop.systemd1.manage-units" &&
-          action.lookup("unit") == "${servicename}${toString i}.service" &&
-          subject.user == "${user}") {
-            return polkit.Result.YES;
-          }
-      });
-    '';
+    let
+      polkitConfig = i: user: {
+        extraConfig = ''
+          polkit.addRule(function(action, subject) {
+            if (action.id == "org.freedesktop.systemd1.manage-units" &&
+              action.lookup("unit") == "${servicename i}.service" &&
+              subject.user == "${user}") {
+                return polkit.Result.YES;
+              }
+          });
+        '';
+      };
+      fn = i: { enable, users, ... }: mkIf enable (mkMerge (map (polkitConfig i) users));
     in
-    i: args: mkIf args.enable {
-      extraConfig = toString (imap fn args.users);
-    };
+    imap fn;
+
+  mkHomeManagerActivations =
+    let
+      hmConfig = i: user: {
+        ${user}.systemd.user.services."${servicename i}" = {
+          Service = {
+            Type = "exec";
+            Restart = "always";
+            Environment = [ "PATH=${systemd}/bin:${coreutils}/bin" ];
+            ExecStart = toString (writeScript "openfortivpn-user-start" ''
+              #!${bash}/bin/bash
+              set -o errexit
+              systemctl start ${servicename i}
+              while [[ "$(systemctl show --property MainPID --value ${servicename i}.service)" > 0 ]]; do
+                echo openfortivpn is alive >&2
+                sleep 1
+              done
+            '');
+            ExecStop = "systemctl stop ${servicename i}";
+          };
+          Install = {
+            WantedBy = [ "default.target" ];
+          };
+        };
+      };
+      fn = i: { users, enable, ... }: mkIf enable (mkMerge (map (hmConfig i) users));
+    in
+    imap fn;
+
 in
 {
   inherit options;
-  config.systemd = mkMerge (
-    (imap mkServiceConf config.services.openfortivpn)
-    #++ (imap mkUserServiceConfs config.services.openfortivpn)
-    ++ toList template
-  );
-  config.security.polkit = mkMerge (imap mkPolkitRules config.services.openfortivpn);
+  config.systemd = mkMerge (mkServices cfg);
+  config.home-manager.users = mkMerge (mkHomeManagerActivations cfg);
+  config.security.polkit = mkMerge (mkPolkitRules cfg);
 }

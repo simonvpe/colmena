@@ -51,25 +51,4 @@
     configPath = "/run/secrets/neti/vpn.config";
     users = [ "neti" ];
   }];
-
-  #
-  # This is required for the vpn service to work since systemd-resolved
-  # is a bit finnicky and openfortivpn needs root to run.
-  #
-  # security.sudo.extraRules = [
-  #   {
-  #     users = [ "neti" ];
-  #     commands = [
-  #       {
-  #         command = "${pkgs.systemd}/bin/resolvectl";
-  #         options = [ "NOPASSWD" ];
-  #       }
-  #       {
-  #         command = "${pkgs.openfortivpn}/bin/openfortivpn";
-  #         options = [ "NOPASSWD" ];
-  #       }
-  #     ];
-  #   }
-  # ];
-
 }
