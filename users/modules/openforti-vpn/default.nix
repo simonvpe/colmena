@@ -1,21 +1,16 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, nixpkgs, ... }:
 with pkgs.lib;
 let
   cfg = config.services.openforti-vpn;
-  inherit (pkgs) openfortivpn writeScriptBin nodePackages crudini;
-  inherit (pkgs) fetchFromGitHub bash coreutils systemd writeScript;
+  inherit (pkgs) writeScriptBin nodePackages crudini callPackage;
+  inherit (pkgs) fetchFromGitHub bash coreutils writeScript;
   inherit (nodePackages) bitwarden-cli;
   inherit (builtins) toString;
   inherit (lib) mkOption mkEnableOption mkIf;
-  path = "PATH=${systemd}/bin:${coreutils}/bin:${crudini}/bin:/run/wrappers/bin";
+  path = "PATH=${coreutils}/bin:${crudini}/bin:/run/wrappers/bin";
 in
 {
   options.services.openforti-vpn.enable = mkEnableOption "openforti-vpn";
-
-  options.services.openforti-vpn.package = mkOption {
-    type = types.package;
-    default = openfortivpn;
-  };
 
   options.services.openforti-vpn.pppdIFName = mkOption {
     type = types.str;
@@ -58,7 +53,7 @@ in
         ExecStart = toString (writeScript "exec" ''
           #!${bash}/bin/bash
           export ${path}
-          sudo ${cfg.package}/bin/openfortivpn -c ${cfg.cfgPath}
+          /run/wrappers/bin/openfortivpn -c ${cfg.cfgPath}
         '');
         ExecStartPost = toString (writeScript "postExec" ''
           #!${bash}/bin/bash
@@ -67,8 +62,8 @@ in
             echo "waiting for ${cfg.pppdIFName}" >&2
             sleep 1
           done
-          sudo resolvectl dnssec ppp0 false
-          sudo resolvectl reset-server-features
+          /run/wrappers/bin/resolvectl dnssec ppp0 false
+          /run/wrappers/bin/resolvectl reset-server-features
         '');
       };
       Install = {

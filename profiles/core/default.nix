@@ -4,6 +4,8 @@ in
 {
   imports = [ ../cachix ];
 
+  time.timeZone = "Europe/Stockholm";
+
   nix.systemFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
 
   environment = {

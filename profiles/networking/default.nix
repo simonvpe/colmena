@@ -1,3 +1,9 @@
+{ pkgs
+, ...
+}:
+let
+
+in
 {
   networking = {
     useNetworkd = true;
