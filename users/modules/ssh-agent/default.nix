@@ -14,13 +14,13 @@ let
   keyPassComboOption = types.submodule {
     options = {
       key = mkOption {
-        type = types.path;
+        type = types.str;
         default = null;
         description = "Path to the ssh private key file";
       };
       passphrase = mkOption {
-        type = types.nullOr types.path;
-        default = null;
+        type = types.str;
+        default = "";
         description = "Path to the passphrase to open the key";
       };
     };
@@ -57,6 +57,7 @@ let
     #!${bash}/bin/bash
     # Usage: SSH_PASSFILE=<file> $0
     ${debugScript}
+    chmod 0600 "$SSH_PASSFILE"
     exec cat "''${SSH_PASSFILE:-/dev/null}"
   '';
 
@@ -66,9 +67,10 @@ let
     ${debugScript}
     set -o nounset -o errexit
     export SSH_PASSFILE="''${2:-/dev/null}"
-    export SSH_ASKPASS=${ssh-askpass}/bin/ssh-askpass
+    export SSH_ASKPASS="''${2:+${ssh-askpass}/bin/ssh-askpass}"
     export DISPLAY=/dev/null
     test -e ''${SSH_AUTH_SOCK?required}
+    chmod 0600 "$1"
     ${openssh}/bin/ssh-add "$1" < /dev/null
   '';
 
