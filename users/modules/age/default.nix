@@ -101,6 +101,7 @@ let
   secrets = mapAttrs (outputPath: secret: secret // { inherit outputPath; }) cfg.secrets;
   age-encrypt = callPackage ./age-encrypt.nix { inherit recipients; };
   age-decrypt = callPackage ./age-decrypt.nix { inherit identities; };
+  age-rekey = callPackage ./age-rekey.nix { inherit age-encrypt age-decrypt; };
 in
 {
   inherit options;
@@ -168,6 +169,6 @@ in
       in
       mapAttrs mkHmFile secrets;
 
-    home.packages = [ age-encrypt age-decrypt ];
+    home.packages = [ age-encrypt age-decrypt age-rekey ];
   };
 }
