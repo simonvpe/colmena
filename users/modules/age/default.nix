@@ -10,7 +10,7 @@ let
   inherit (lib) mkIf mapAttrsToList mapAttrs pipe flip attrValues;
   inherit (lib.cli) toGNUCommandLineShell;
   inherit (lib.options) mkOption mkEnableOption;
-  inherit (lib.types) path submodule attrsOf str nullOr either nonEmptyStr listOf package;
+  inherit (lib.types) path submodule attrsOf str nullOr either nonEmptyStr listOf package int;
   inherit (lib.strings) concatMapStringsSep removeSuffix removePrefix replaceStrings makeSearchPath;
   inherit (lib.lists) flatten imap0 zipListsWith concatMap;
   inherit (builtins) toString baseNameOf dirOf;
@@ -72,12 +72,14 @@ let
       default = { };
     };
 
-    xdgRuntimeDir = mkOption {
+    uid = mkOption {
+      type = int;
+      description = "TODO: this is not nice, should be possible to get it from the configuration";
+    };
+
+    secretsDir = mkOption {
       type = path;
-      description = ''
-        TODO: workaround for not being able to reliably figure out the XDG_RUNTIME_DIR
-        for the users that didn't run nixos-rebuild
-      '';
+      default = "/run/user/${toString cfg.uid}/age";
     };
 
     secrets = mkOption {
@@ -91,11 +93,10 @@ let
     };
   };
 
-  mkVolatilePath = { inputPath, ... }: removeSuffix ".age" "${secretsDir}/${baseNameOf inputPath}";
+  mkVolatilePath = { inputPath, ... }: removeSuffix ".age" "${cfg.secretsDir}/${baseNameOf inputPath}";
   mkOutputPathAbs = { outputPath, ... }: "${config.home.homeDirectory}/${outputPath}";
   mkMapText = concatMapStringsSep "\n";
 
-  secretsDir = cfg.xdgRuntimeDir; #"/run/user/$(id -u ${config.home.username})/secrets";
   identities = toString (map (x: "--identity '${config.home.homeDirectory}/${x}'") cfg.identities);
   recipients = toString (mapAttrsToList (_: x: "--recipient '${x}'") cfg.recipients);
   secrets = mapAttrs (outputPath: secret: secret // { inherit outputPath; }) cfg.secrets;
@@ -135,6 +136,8 @@ in
       {
         Unit = {
           Description = "Decryption of secrets using age";
+          Requires = [ "run-user-${toString cfg.uid}.mount" ];
+          After = [ "run-user-${toString cfg.uid}.mount" ];
         };
         Service = {
           Type = "oneshot";
@@ -156,11 +159,16 @@ in
             ln = secret@{ outputPath, ... }: "ln -s ${mkVolatilePath secret} $out/${outputPath}";
             secrets' = attrValues secrets;
           in
-          runCommandNoCC "secrets" { } ''
-            set -o errexit
-            ${mkMapText mkdir secrets'}
-            ${mkMapText ln secrets'}
-          '';
+          runCommandNoCC "secrets"
+            {
+              preferLocalBuilds = true;
+              allowSubstitutes = false;
+            }
+            ''
+              set -o errexit
+              ${mkMapText mkdir secrets'}
+              ${mkMapText ln secrets'}
+            '';
         # TODO: fix permissions too loose on symlinks, right now ssh-agent just force chmods before running
         mkHmFile = _: { outputPath, ... }: {
           source = "${linksInStore}/${outputPath}";

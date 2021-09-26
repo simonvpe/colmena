@@ -35,9 +35,14 @@ let
       description = "Keys you want ssh agent to hold";
     };
 
+    services.ssh-agent.uid = mkOption {
+      type = types.int;
+      description = "TODO: we should be able to figure this out without user specifying it";
+    };
+
     services.ssh-agent.sshAuthSock = mkOption {
       type = types.str;
-      default = "$XDG_RUNTIME_DIR/ssh-agent.socket";
+      default = "/run/user/${toString cfg.uid}/ssh-agent.socket";
       description = "The socket to reach ssh-agent";
     };
   };
@@ -74,27 +79,22 @@ let
     ${openssh}/bin/ssh-add "$1" < /dev/null
   '';
 
-  pre-check = writeScriptBin "pre-check" ''
-    #!${bash}/bin/bash
-    ${debugScript}
-    set -o errexit
-    test -e ''${XDG_RUNTIME_DIR?required}
-  '';
-
   mapAttrsToEnvironmentList' = mapAttrsToList (key: val: "${key}=${val}");
   mapAttrsToEnvironmentList = as: mkMerge (map mapAttrsToEnvironmentList' (toList as));
 
   PATH = makeSearchPath "bin" [ openssh coreutils ];
 
   service = {
+    Unit = {
+      Requires = [ "age.service" "run-user-${toString cfg.uid}.mount" ];
+      After = [ "age.service" "run-user-${toString cfg.uid}.mount" ];
+    };
     Service = {
       Type = "exec";
       Environment = mapAttrsToEnvironmentList [
-        { XDG_RUNTIME_DIR = "%t"; }
-        { SSH_AUTH_SOCK = replaceStrings [ "$XDG_RUNTIME_DIR" ] [ "%t" ] cfg.sshAuthSock; }
+        { SSH_AUTH_SOCK = cfg.sshAuthSock; }
         { inherit PATH; }
       ];
-      ExecStartPre = "${pre-check}/bin/pre-check";
       ExecStart = "${openssh}/bin/ssh-agent -D -a $SSH_AUTH_SOCK";
       ExecStartPost = map (x: "${ssh-add}/bin/ssh-add ${x.key} ${x.passphrase}") cfg.keys;
     };

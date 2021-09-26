@@ -11,7 +11,7 @@
 
     age = {
       enable = true;
-      xdgRuntimeDir = "/run/user/1000";
+      uid = 1000;
       identities = [ ".ssh/id_ed25519" ];
       recipients = {
         hyperactivitydrive = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFj4hF3gCgGkoRwfURZOI7wUY/HM/C404Vv7zxmNNlMX simon@thesourcerer.se";
@@ -26,6 +26,7 @@
 
     services.ssh-agent = {
       enable = true;
+      uid = 1000;
       # TODO: stupid stupi XDG_RUNTIME_DIR!
       sshAuthSock = "/run/user/1000/ssh-agent.sock";
       keys = [

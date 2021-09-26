@@ -12,7 +12,7 @@
     programs.qtcreator.enable = true;
     age = {
       enable = true;
-      xdgRuntimeDir = "/run/user/1002";
+      uid = 1002;
       identities = [ ".ssh/id_ed25519" ];
       recipients = {
         hyperactivitydrive = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl0x0lHyufCLVvRnyXoNQ+yokV+EwKFn+qkGpELGdo1 neti@hyperactivitydrive";
@@ -26,7 +26,7 @@
 
     services.ssh-agent = {
       enable = true;
-      sshAuthSock = "/run/user/1002/ssh-agent.sock";
+      uid = 1002;
       keys = [
         {
           key = ".ssh/id_ed25519.neti";
