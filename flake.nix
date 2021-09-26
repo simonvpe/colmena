@@ -121,7 +121,7 @@
             };
             suites = with profiles; rec {
               base = [ core nix networking users.root ];
-              laptop = base ++ [ x11 wifi users.starlord users.neti ];
+              laptop = base ++ [ x11 wifi tpm users.starlord users.neti ];
             };
           };
         };
