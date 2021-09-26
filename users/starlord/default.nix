@@ -24,6 +24,9 @@
 
   users.users.starlord = {
     hashedPassword = "$6$WjQs8n.Ibo$y7lNx0OBkJi2O2gTO64BHbLfhsHIbXz3xOq0qbBuzUmVZRRVimyR7xJ0oQDGh0QgS0nWo/Iud4GTrUaFyHfOd/";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILpAEQtDJym2oytUzIzKV6/ZNvqKbF+kUIZn+J3CoBK3 starlord@hyperactivitydrive"
+    ];
     isNormalUser = true;
     extraGroups = [
       "wheel"
