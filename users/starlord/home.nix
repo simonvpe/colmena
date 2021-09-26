@@ -21,7 +21,7 @@
     };
 
     home.file = {
-      "./ssh/id_ed25519.starlord.pub".text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDf09/1efUHYJRpw4UTummC2ALfMw9ZBb4tajKC60qob starlord@hyperactivitydrive";
+      ".ssh/id_ed25519.starlord.pub".text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDf09/1efUHYJRpw4UTummC2ALfMw9ZBb4tajKC60qob starlord@hyperactivitydrive";
     };
 
     services.ssh-agent = {
