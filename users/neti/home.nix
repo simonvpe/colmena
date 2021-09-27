@@ -22,7 +22,7 @@
       secrets.".ssh/config.neti".inputPath = "${./secrets}/ssh.config.neti.age";
       secrets.".config/vpn.config".inputPath = "${./secrets}/vpn.config.age";
     };
-    home.file.".ssh/id_ed25519.neti.pub".text = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINpB8mN53EugQN9r99SpCAy6iigHnxuN1u+2gN/Pup29 simpet@netinsight.net";
+    home.file.".ssh/id_ed25519.neti.pub".source = ../public-keys/id_ed25519.neti.pub;
 
     services.ssh-agent = {
       enable = true;
