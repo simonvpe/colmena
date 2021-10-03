@@ -1,3 +1,4 @@
+{ host }:
 let
   flake = builtins.getFlake (toString ../../.);
   nixpkgs = import <nixpkgs> { };
@@ -7,4 +8,8 @@ in
 // builtins
 // nixpkgs
 // nixpkgs.lib
-  // flake.nixosConfigurations
+  // {
+  simux.config = flake.nixosConfigurations.${host};
+  simux.channels = flake.pkgs.${builtins.currentSystem};
+  getFlake = path: builtins.getFlake (builtins.toString path);
+}

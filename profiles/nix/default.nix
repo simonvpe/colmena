@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, inputs, config, ... }:
 {
   nix = {
     autoOptimiseStore = true;
@@ -23,7 +23,12 @@
     package = pkgs.nixUnstable;
   };
   environment.shellAliases = {
-    rpl = ''source /etc/set-environment && nix repl $(echo $NIX_PATH | perl -pe "s|.*(/nix/store/.*-source/profiles/nix/repl.nix).*|\\1|")'';
+    rpl = builtins.toString [
+      "source /etc/set-environment"
+      "&& nix repl"
+      "--argstr host '${config.networking.hostName}'"
+      "$(echo $NIX_PATH | perl -pe 's|.*(/nix/store/.*-source/profiles/nix/repl.nix).*|\\1|')"
+    ];
   };
 
   environment.systemPackages = with pkgs; [
