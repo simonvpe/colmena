@@ -17,21 +17,13 @@
     '';
     nixPath = [
       "repl=${toString ./.}/repl.nix"
-      "nixpkgs=${inputs.nixpkgs}"
     ];
     registry.nixpkgs.flake = inputs.nixpkgs;
     package = pkgs.nixUnstable;
   };
-  environment.shellAliases = {
-    rpl = builtins.toString [
-      "source /etc/set-environment"
-      "&& nix repl"
-      "--argstr host '${config.networking.hostName}'"
-      "$(echo $NIX_PATH | perl -pe 's|.*(/nix/store/.*-source/profiles/nix/repl.nix).*|\\1|')"
-    ];
-  };
 
   environment.systemPackages = with pkgs; [
+    repl
     nix-goto
   ];
 
