@@ -147,6 +147,7 @@
                 bash
                 bat
                 direnv
+                exa
                 fzf
                 git
                 i3
