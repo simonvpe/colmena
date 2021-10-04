@@ -16,7 +16,6 @@ in
         bars = [ ];
         fonts.names = [ "pango:monospace" ];
         fonts.size = 11.0;
-        terminal = "${pkgs.termite}/bin/termite";
         floating.modifier = modifier;
         startup = [
           { command = "${pkgs.autorandr}/bin/autorandr"; always = false; }
@@ -37,7 +36,7 @@ in
           "XF86MonBrightnessDown" = "exec --no-startup-id ${pkgs.light}/bin/light -U 10";
 
           # Start apps
-          "${modifier}+Return" = "exec ${terminal}";
+          "${modifier}+Return" = "exec ${config.xsession.windowManager.i3.config.terminal}";
           "${modifier}+e" = "exec --no-startup-id ${pkgs.rofi}/bin/rofi -show run";
 
           # Window management
@@ -101,4 +100,3 @@ in
     };
   };
 }
-

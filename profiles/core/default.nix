@@ -46,10 +46,6 @@ in
       whois
     ];
 
-    shellInit = ''
-      TERM=vt100
-    '';
-
     shellAliases = {
       top = "btm";
     };

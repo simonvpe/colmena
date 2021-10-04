@@ -4,7 +4,6 @@
 # in
 {
   config = {
-    # home.sessionVariables.SSH_AUTH_SOCK = "${XDG_RUNTIME_DIR}/ssh-agent.sock";
     programs.git.userName = "Simon Pettersson";
     programs.git.userEmail = "simpet@netinsight.net";
     programs.ssh.extraConfig = "Include ~/.ssh/config.neti";

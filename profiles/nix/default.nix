@@ -25,6 +25,7 @@
   environment.systemPackages = with pkgs; [
     repl
     nix-goto
+    nix-tree
   ];
 
   nixpkgs = {
