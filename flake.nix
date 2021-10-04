@@ -38,6 +38,12 @@
       naersk.url = "github:nmattia/naersk";
       naersk.inputs.nixpkgs.follows = "latest";
 
+      rust-overlay.url = "github:oxalica/rust-overlay";
+      rust-overlay.inputs.nixpkgs.follows = "latest";
+
+      nix-tree.url = "github:utdemir/nix-tree";
+      nix-tree.inputs.nixpkgs.follows = "latest";
+
       nixos-hardware.url = "github:simonvpe/nixos-hardware/asus-zenbook-ux371";
 
       # start ANTI CORRUPTION LAYER
@@ -47,6 +53,7 @@
       blank.follows = "digga/blank";
       flake-utils-plus.follows = "digga/flake-utils-plus";
       flake-utils.follows = "digga/flake-utils";
+      nix-tree.inputs.flake-utils.follows = "digga/flake-utils";
       # end ANTI CORRUPTION LAYER
     };
 
@@ -61,6 +68,8 @@
     , agenix
     , nvfetcher
     , deploy
+    , rust-overlay
+    , nix-tree
     , ...
     } @ inputs:
     digga.lib.mkFlake
@@ -69,7 +78,7 @@
 
         channelsConfig = { allowUnfree = true; };
 
-        channels = {
+        channels = rec {
           nixos = {
             imports = [ (digga.lib.importOverlays ./overlays) ];
             overlays = [
@@ -78,6 +87,8 @@
               agenix.overlay
               nvfetcher.overlay
               deploy.overlay
+              rust-overlay.overlay
+              nix-tree.overlay
               ./pkgs/default.nix
             ];
           };
@@ -99,8 +110,8 @@
           hostDefaults = {
             system = "x86_64-linux";
             channelName = "nixos";
-            imports = [ (digga.lib.importModules ./modules) ];
-            externalModules = [
+            imports = [ (digga.lib.importExportableModules ./modules) ];
+            exportedModules = [
               { lib.our = self.lib; }
               digga.nixosModules.bootstrapIso
               digga.nixosModules.nixConfig
@@ -127,8 +138,8 @@
         };
 
         home = {
-          imports = [ (digga.lib.importModules ./users/modules) ];
-          externalModules = [ ];
+          imports = [ (digga.lib.importExportableModules ./users/modules) ];
+          exportedModules = [ ];
           importables = rec {
             profiles = digga.lib.rakeLeaves ./users/profiles;
             suites = with profiles; rec {
@@ -144,7 +155,7 @@
                 rofi
                 ssh
                 starship
-                termite
+                terminal
                 vim
                 web
               ];
