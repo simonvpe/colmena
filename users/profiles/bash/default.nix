@@ -9,8 +9,5 @@
       printf '%s' "$(cat ~/.cache/wal/sequences)"
       source ~/.cache/wal/colors-tty.sh
     '';
-    shellAliases = {
-      cat = "${pkgs.bat}/bin/bat";
-    };
   };
 }
