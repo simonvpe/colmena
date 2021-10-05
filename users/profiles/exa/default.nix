@@ -5,6 +5,7 @@
 let
   aliases = {
     ll = lib.mkForce "${pkgs.exa}/bin/exa --long --header --git";
+    lt = lib.mkForce "${pkgs.exa}/bin/exa --long --header --git --tree";
   };
 in
 {
