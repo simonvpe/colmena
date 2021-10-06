@@ -148,7 +148,7 @@
                 bat
                 direnv
                 exa
-                fzf
+                skim
                 git
                 i3
                 keyboard
