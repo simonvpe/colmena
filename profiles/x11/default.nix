@@ -19,10 +19,11 @@
       corefonts
       inconsolata
       inconsolata-nerdfont
+      dejavu_fonts
     ];
     fontconfig.defaultFonts = {
-      serif = [ "Inconsolata Nerd Font" ];
-      sansSerif = [ "Inconsolata Nerd Font" ];
+      serif = [ "DejaVu Sans" "Inconsolata Nerd Font" ];
+      sansSerif = [ "DejaVu Sans" "Inconsolata Nerd Font" ];
       monospace = [ "Inconsolata Nerd Font Mono" ];
     };
   };
