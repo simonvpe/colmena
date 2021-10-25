@@ -34,7 +34,7 @@
   '';
 
   services.xserver.videoDrivers = [ "nvidia" ];
-  services.xserver.dpi = 180;
+  services.xserver.dpi = 110;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
