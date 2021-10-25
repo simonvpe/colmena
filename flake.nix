@@ -133,6 +133,7 @@
             suites = with profiles; rec {
               base = [ core nix networking users.root ];
               laptop = base ++ [ x11 wifi pam tpm sound users.starlord users.neti ];
+              desktop = base ++ [ x11 pam tpm sound users.starlord users.neti ];
             };
           };
         };

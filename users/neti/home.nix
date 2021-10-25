@@ -15,6 +15,7 @@
       identities = [ ".ssh/id_ed25519" ];
       recipients = {
         hyperactivitydrive = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBl0x0lHyufCLVvRnyXoNQ+yokV+EwKFn+qkGpELGdo1 neti@hyperactivitydrive";
+        battlestation = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF2olFcrre8xXEGuQIUauzQFiVfDzsGpsv5yLX4691Ud neti@battlestation";
       };
       secrets.".ssh/id_ed25519.neti".inputPath = "${./secrets}/id_ed25519.neti.age";
       secrets.".ssh/id_ed25519.neti.pass".inputPath = "${./secrets}/id_ed25519.neti.pass.age";
