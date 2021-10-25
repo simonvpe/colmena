@@ -40,7 +40,7 @@
     EOF
   '';
 
-  services.xserver.dpi = 180;
+  services.xserver.dpi = 330;
   services.xserver.libinput.enable = true;
   services.xserver.libinput.mouse.disableWhileTyping = true;
   services.udev.extraRules = ''
