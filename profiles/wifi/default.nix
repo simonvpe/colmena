@@ -11,5 +11,6 @@
     OnePlus3.psk = "pappapappa";
     #"513F8F".psk = "c9mior2jcy";
     Bolema.psk = "Split053";
+    Eckero_public = { };
   };
 }
