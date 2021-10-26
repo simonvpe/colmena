@@ -52,6 +52,15 @@
         "x-systemd"
         "uid=1002"
         "gid=100"
+
+        # We're already on an encrypted vpn so we don't really need more encryption than that
+        # "Ciphers=arcfour"
+
+        # Disable compression for speed
+        "Compression=no"
+
+        # Enable local caching
+        "auto_cache"
       ];
     };
 
