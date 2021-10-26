@@ -36,6 +36,7 @@ in
       ntfs3g
       ripgrep
       skim
+      sshfs
       strace
       sysstat
       tree
