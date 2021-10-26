@@ -1,4 +1,4 @@
-{ config, pkgs, age, ... }:
+{ config, pkgs, lib, age, ... }:
 # let
 #   inherit (config.home.sessionVariables) XDG_RUNTIME_DIR;
 # in
@@ -35,5 +35,30 @@
       ];
     };
     systemd.user.startServices = true;
+
+    systemd.user.mounts.home-neti-hosts-delia = {
+      Unit.Description = "Mount delia over sshfs with fuse";
+      Unit.After = [ "age.service" "openfortivpn-1.service" "ssh-agent.service"];
+      Unit.Requires = [ "age.service" "openfortivpn-1.service" "ssh-agent.service"];
+      Install.WantedBy = [ "default.target" ];
+      Mount.What = "delia:/home/simpet/projects";
+      Mount.Where = "/home/neti/hosts/delia";
+      Mount.Type = "fuse.sshfs";
+      Mount.Options = lib.concatStringsSep "," [
+        "_netdev"
+        "default_permissions"
+        "IdentityFile=/home/neti/.ssh/id_ed25519.neti"
+        "reconnect"
+        "x-systemd"
+        "uid=1002"
+        "gid=100"
+      ];
+    };
+
+    systemd.user.automounts.home-neti-hosts-delia = {
+      Unit.Description = "Automount delia over sshfs with fuse";
+      Automount.Where = config.systemd.user.mounts.home-neti-hosts-delia.Mount.Where;
+      Install.WantedBy = [ "default.target" ];
+    };
   };
 }
