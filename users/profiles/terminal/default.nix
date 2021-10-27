@@ -25,6 +25,6 @@ in
   config.terminal.package = pkgs.alacritty;
   config.terminal.config.settings = {
     font.normal.family = "MesloLGS Nerd Font Mono";
-    font.size = 8;
+    font.size = 10;
   } // (theme "tomorrow_night_bright");
 }
