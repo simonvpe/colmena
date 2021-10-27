@@ -131,7 +131,7 @@
               users = digga.lib.rakeLeaves ./users;
             };
             suites = with profiles; rec {
-              base = [ core nix networking users.root ];
+              base = [ core shell nix networking users.root ];
               laptop = base ++ [ x11 wifi pam tpm sound users.starlord users.neti ];
               desktop = base ++ [ x11 pam tpm sound users.starlord users.neti ];
             };
@@ -145,7 +145,7 @@
             profiles = digga.lib.rakeLeaves ./users/profiles;
             suites = with profiles; rec {
               base = [
-                bash
+                shell
                 bat
                 direnv
                 exa
