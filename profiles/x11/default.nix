@@ -16,15 +16,17 @@
     fontDir.enable = true;
     enableGhostscriptFonts = true;
     fonts = with pkgs; [
+      # Microsoft's TrueType core fonts for the Web
       corefonts
-      inconsolata
-      inconsolata-nerdfont
-      dejavu_fonts
+      # Iconic font aggregator, collection, & patcher. 3,600+ icons, 50+ patched fonts
+      nerdfonts
+      # Meslo Nerd Font patched for Powerlevel10k
+      meslo-lgs-nf
     ];
     fontconfig.defaultFonts = {
-      serif = [ "DejaVu Sans" "Inconsolata Nerd Font" ];
-      sansSerif = [ "DejaVu Sans" "Inconsolata Nerd Font" ];
-      monospace = [ "Inconsolata Nerd Font Mono" ];
+      serif = [ "NotoSerif Nerd Font" ];
+      sansSerif = [ "NotoSerif Nerd Font" ];
+      monospace = [ "MesloLGS Nerd Font Mono" ];
     };
   };
 }
