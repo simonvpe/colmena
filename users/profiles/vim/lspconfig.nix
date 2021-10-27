@@ -5,6 +5,7 @@
 {
   config.programs.neovim = {
     plugins = with pkgs.vimPlugins; [
+      lsp-colors-nvim
       nvim-lspconfig
     ];
 
@@ -37,6 +38,15 @@
       " have a fixed column for the diagnostics to appear in
       " this removes the jitter when warnings/errors flow in
       set signcolumn=yes
+
+      lua<<EOF
+      require'lsp-colors'.setup {
+        Error = "#db4b4b",
+        Warning = "#e0af68",
+        Information = "#0db9d7",
+        Hint = "#10B981"
+      }
+      EOF
     '';
   };
 }

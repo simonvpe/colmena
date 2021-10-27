@@ -5,7 +5,15 @@
 
 {
 
-  imports = [ ./gitsigns.nix ./skim.nix ./lspconfig.nix ./cmp.nix ./rust-tools.nix ];
+  imports = [
+    ./gitsigns.nix
+    ./skim.nix
+    ./lspconfig.nix
+    ./cmp.nix
+    ./rust-tools.nix
+    ./trouble.nix
+    ./floaterm.nix
+  ];
   config.programs.neovim = {
     enable = true;
     viAlias = true;
