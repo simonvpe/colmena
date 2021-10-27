@@ -2,7 +2,7 @@
   config.programs.skim = {
     enable = true;
     enableBashIntegration = true;
-    enableZshIntegration = false;
+    enableZshIntegration = true;
     enableFishIntegration = false;
   };
 }
