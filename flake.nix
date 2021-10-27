@@ -156,7 +156,6 @@
                 polybar
                 rofi
                 ssh
-                starship
                 terminal
                 vim
                 web
