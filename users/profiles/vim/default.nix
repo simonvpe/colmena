@@ -39,31 +39,40 @@
       vim-sleuth
       vim-surround # Quoting/parenthesizing made simple
       rust-tools-nvim
+      nvim-treesitter
     ];
     extraConfig = ''
-      " General settings
-      syntax on
-      set number relativenumber
-      set ff=unix
-      set tabstop=4
-      set shiftwidth=4
-      set expandtab
-      set cursorline
-      set list
-      set listchars=tab:>-
-      set noswapfile
-      set nobackup
-      set exrc
+        " General settings
+        syntax on
+        set number relativenumber
+        set ff=unix
+        set tabstop=4
+        set shiftwidth=4
+        set expandtab
+        set cursorline
+        set list
+        set listchars=tab:>-
+        set noswapfile
+        set nobackup
+        set exrc
 
-      " Whitespace settings
-      let g:strip_whitespace_on_save = 1
-      let g:strip_whitespace_confirm = 0
+        " Whitespace settings
+        let g:strip_whitespace_on_save = 1
+        let g:strip_whitespace_confirm = 0
 
-      " Code formatting
-      augroup fmt
-        autocmd!
-        autocmd BufWritePre * undojoin | Neoformat
-      augroup END
+        " Code formatting
+        augroup fmt
+          autocmd!
+          autocmd BufWritePre * undojoin | Neoformat
+        augroup END
+
+        lua <<EOF
+        require'nvim-treesitter.configs'.setup {
+          highlight = { enable = true },
+          incremental_selection = { enable = true },
+          textobjects = { enable = true },
+        }
+      EOF
     '';
   };
 }
