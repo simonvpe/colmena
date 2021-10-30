@@ -5,14 +5,20 @@
     initExtra = ''
       export MANPAGER="sh -c 'col -b | ${pkgs.bat}/bin/bat -l man -p'";
       export EDITOR=nvim
-      export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
-      . ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-      . ${./.p10k.zsh}
-
+      ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
     '';
     plugins = [
       {
-        name = "zsh-vi-tools";
+        name = "zsh-autosuggestions";
+        src = pkgs.zsh-autosuggestions;
+        file = "share/zsh-autosuggestions/zsh-autosuggestions.zsh";
+      }
+      {
+        name = "zsh-powerlevel10k";
+        src = pkgs.callPackage ./zsh-powerlevel10k-with-config.nix { config = ./.p10k.zsh; };
+      }
+      {
+        name = "zsh-vi-mode";
         src = pkgs.fetchgit {
           url = "https://github.com/jeffreytse/zsh-vi-mode";
           rev = "9e71245f29ddbb800de0a573ea42c0af08e4071b";
