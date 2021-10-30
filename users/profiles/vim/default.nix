@@ -52,8 +52,6 @@
         set cursorline
         set list
         set listchars=tab:>-
-        set noswapfile
-        set nobackup
         set exrc
 
         " Whitespace settings
@@ -73,6 +71,13 @@
           textobjects = { enable = true },
         }
       EOF
+
+      set swapfile
+      set nobackup
+      set directory=$XDG_RUNTIME_DIR,~/.vim
+
+      " Allow hiding buffers to not have to save on switching buffers
+      set hidden
     '';
   };
 }
