@@ -11,20 +11,14 @@
 
     '';
     plugins = [
-      # pkgs.zsh-powerlevel10k
-      # {
-      #   name = "powerlevel10k";
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "romkatv";
-      #     repo = "powerlevel10k";
-      #     rev = "v1.15.0";
-      #     sha256 = "sha256-mLPJwXqy8uL1/QOkAG31iKJ1wReH8xzJ/6PbqGIWcqw=";
-      #   };
-      # }
-      # {
-      #   name = "zsh-autosuggestions";
-      #   src = pkgs.fetchFrom
-      # }
+      {
+        name = "zsh-vi-tools";
+        src = pkgs.fetchgit {
+          url = "https://github.com/jeffreytse/zsh-vi-mode";
+          rev = "9e71245f29ddbb800de0a573ea42c0af08e4071b";
+          sha256 = "sha256-2/j+QAm4cZm9y2yOfwmlj+Lxq2Oy3UDcY1woAUOy6ZU=";
+        };
+      }
     ];
   };
 }
