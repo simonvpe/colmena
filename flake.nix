@@ -156,6 +156,7 @@
                 polybar
                 rofi
                 ssh
+                surfraw
                 terminal
                 vim
                 web
