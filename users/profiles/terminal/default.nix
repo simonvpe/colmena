@@ -1,7 +1,10 @@
 { pkgs
+, config
+, lib
 , ...
 }:
 let
+  cfg = config.terminal;
 
   theme =
     let
@@ -22,9 +25,13 @@ let
     }}/themes/${name}.yaml");
 in
 {
+  options.terminal.fontSize = lib.mkOption {
+    type = lib.types.ints.positive;
+    default = 10;
+  };
   config.terminal.package = pkgs.alacritty;
   config.terminal.config.settings = {
     font.normal.family = "MesloLGS Nerd Font Mono";
-    font.size = 10;
+    font.size = cfg.fontSize;
   } // (theme "tomorrow_night_bright");
 }
