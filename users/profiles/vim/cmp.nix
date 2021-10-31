@@ -41,10 +41,10 @@
 
         -- Installed sources
         sources = {
-          { name = 'nvim_lsp' },
-          { name = 'vsnip' },
-          { name = 'path' },
           { name = 'buffer' },
+          { name = 'nvim_lsp' },
+          { name = 'path' },
+          { name = 'vsnip' },
         },
       }
       EOF
