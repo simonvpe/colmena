@@ -8,9 +8,9 @@ channels: final: prev: {
     dhall
     discord
     element-desktop
-    rage
     nixpkgs-fmt
     qutebrowser
+    rage
     signal-desktop
     starship;
 
