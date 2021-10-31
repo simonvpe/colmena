@@ -73,6 +73,10 @@
 
       " Allow hiding buffers to not have to save on switching buffers
       set hidden
+
+      " Automatically set the current working directory to the file
+      " you're on
+      set autochdir
     '';
   };
 }
