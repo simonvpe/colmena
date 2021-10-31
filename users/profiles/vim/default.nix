@@ -14,6 +14,9 @@
     ./trouble.nix
     ./floaterm.nix
 
+    # Tab, window, and file navigation
+    ./navigation.nix
+
     # Lean & mean status/tabline for vim that's light as air.
     ./airline.nix
 
