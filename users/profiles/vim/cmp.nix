@@ -8,6 +8,7 @@
       cmp-buffer
       cmp-nvim-lsp
       cmp-path
+      cmp-treesitter
       cmp-vsnip
       nvim-cmp
     ];
@@ -44,6 +45,7 @@
           { name = 'buffer' },
           { name = 'nvim_lsp' },
           { name = 'path' },
+          { name = 'treesitter' },
           { name = 'vsnip' },
         },
       }
