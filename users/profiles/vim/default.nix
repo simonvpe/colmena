@@ -13,6 +13,9 @@
     ./rust-tools.nix
     ./trouble.nix
     ./floaterm.nix
+
+    # Syntax highlighting
+    ./treesitter.nix
   ];
   config.programs.neovim = {
     enable = true;
@@ -27,7 +30,6 @@
     plugins = with pkgs.vimPlugins; [
       indentLine # A vim plugin to display the indention levels with thin vertical lines
       neoformat
-      semshi # Semantic Highlighting for Python in Neovim
       vim-airline # lean & mean status/tabline for vim that's light as air
       vim-better-whitespace # Better whitespace highlighting for Vim
       vim-commentary # Comment stuff out
@@ -39,7 +41,6 @@
       vim-sleuth
       vim-surround # Quoting/parenthesizing made simple
       rust-tools-nvim
-      nvim-treesitter
     ];
     extraConfig = ''
         " General settings
@@ -63,14 +64,6 @@
           autocmd!
           autocmd BufWritePre * undojoin | Neoformat
         augroup END
-
-        lua <<EOF
-        require'nvim-treesitter.configs'.setup {
-          highlight = { enable = true },
-          incremental_selection = { enable = true },
-          textobjects = { enable = true },
-        }
-      EOF
 
       set swapfile
       set nobackup
