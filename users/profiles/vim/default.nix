@@ -14,6 +14,9 @@
     ./trouble.nix
     ./floaterm.nix
 
+    # VSCode(LSP)'s snippet feature in vim.
+    ./vsnip.nix
+
     # Tab, window, and file navigation
     ./navigation.nix
 
