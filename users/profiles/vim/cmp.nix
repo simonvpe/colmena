@@ -5,11 +5,22 @@
 {
   config.programs.neovim = {
     plugins = with pkgs.vimPlugins; [
+      # nvim-cmp source for buffer words.
       cmp-buffer
+
+      # nvim-cmp source for neovim builtin LSP client
       cmp-nvim-lsp
+
+      # nvim-cmp source for filesystem paths
       cmp-path
+
+      # nvim-cmp source for treesitter nodes
       cmp-treesitter
+
+      # nvim-cmp source for vim-vsnip
       cmp-vsnip
+
+      # A completion engine plugin for neovim written in Lua.
       nvim-cmp
     ];
 
