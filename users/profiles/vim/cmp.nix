@@ -5,11 +5,11 @@
 {
   config.programs.neovim = {
     plugins = with pkgs.vimPlugins; [
-      nvim-cmp
-      cmp-nvim-lsp
-      cmp-vsnip
       cmp-buffer
+      cmp-nvim-lsp
       cmp-path
+      cmp-vsnip
+      nvim-cmp
     ];
 
     # See https://sharksforarms.dev/posts/neovim-rust/
