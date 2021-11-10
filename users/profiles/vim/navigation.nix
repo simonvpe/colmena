@@ -20,8 +20,8 @@
     :nnoremap <silent> tl :tabnext<CR>
 
     " Hop (normal)
-    :nnoremap <silent> hl :HopLine<CR>
-    :nnoremap <silent> hw :HopWord<CR>
+    :nnoremap <silent> <C-h>l :HopLine<CR>
+    :nnoremap <silent> <C-h>w :HopWord<CR>
 
     " Hop (visual) !NOT WORKING
     " :xnoremap <silent> <C-h>l :<C-U>HopLine<CR>
