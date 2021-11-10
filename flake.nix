@@ -151,23 +151,26 @@
                 exa
                 skim
                 git
-                i3
-                keyboard
-                polybar
-                rofi
                 ssh
                 surfraw
                 terminal
                 vim
+              ];
+              gui = [
+                i3
+                keyboard
+                polybar
+                rofi
                 web
               ];
-              starlord = base ++ [ steam ./users/starlord/home.nix ];
-              neti = base ++ [ vscode ./users/neti/home.nix ];
+              starlord = base ++ gui ++ [ steam ./users/starlord/home.nix ];
+              neti = base ++ gui ++ [ vscode ./users/neti/home.nix ];
             };
           };
           users = {
             starlord = { suites, ... }: { imports = suites.starlord; };
             neti = { suites, ... }: { imports = suites.neti; };
+            simpet = { suites, ... }: { imports = suites.base; };
           }; # digga.lib.importers.rakeLeaves ./users/hm;
         };
 
