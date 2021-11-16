@@ -12,8 +12,7 @@ channels: final: prev: {
     qutebrowser
     rage
     signal-desktop
-    starship
-    vimPlugins;
+    starship;
 
   haskellPackages = prev.haskellPackages.override
     (old: {
@@ -26,4 +25,6 @@ channels: final: prev: {
             haskell-language-server;
         });
     });
+
+  vimPlugins = channels.latest.vimPlugins // { };
 }
