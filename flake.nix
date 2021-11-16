@@ -165,12 +165,13 @@
               ];
               starlord = base ++ x11 ++ [ steam ./users/starlord/home.nix ];
               neti = base ++ x11 ++ [ vscode ./users/neti/home.nix ];
+              simpet = base ++ [ ./users/simpet/home.nix ];
             };
           };
           users = {
             starlord = { suites, ... }: { imports = suites.starlord; };
             neti = { suites, ... }: { imports = suites.neti; };
-            simpet = { suites, ... }: { imports = suites.base; };
+            simpet = { suites, ... }: { imports = suites.simpet; };
           }; # digga.lib.importers.rakeLeaves ./users/hm;
         };
 
