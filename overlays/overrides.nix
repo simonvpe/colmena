@@ -26,5 +26,14 @@ channels: final: prev: {
         });
     });
 
-  vimPlugins = channels.latest.vimPlugins // { };
+  vimPlugins = channels.latest.vimPlugins // {
+    vim-merginal = channels.latest.vimPlugins.vim-merginal.overrideAttrs (orig: {
+      src = final.fetchFromGitHub {
+        owner = "idanarye";
+        repo = "vim-merginal";
+        rev = "ad992ac2549e8df96330ca915fe497b6efc5255e";
+        sha256 = "sha256-hD0lpmhDAWPxWBxGjhJX0Y8WgzU/IBnTgHkLyFM5J9Q=";
+      };
+    });
+  };
 }
