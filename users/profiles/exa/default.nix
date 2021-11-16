@@ -4,11 +4,11 @@
 let
   common = "--header --git --icons";
   aliases = {
-    ls = "${pkgs.exa}/bin/exa ${common} --git-ignore";
+    ls = "${pkgs.exa}/bin/exa ${common}";
     la = "${pkgs.exa}/bin/exa ${common} --all";
-    ll = "${pkgs.exa}/bin/exa ${common} --long --git-ignore";
+    ll = "${pkgs.exa}/bin/exa ${common} --long";
     lla = "${pkgs.exa}/bin/exa ${common} --long --all";
-    lt = "${pkgs.exa}/bin/exa ${common} --tree --git-ignore";
+    lt = "${pkgs.exa}/bin/exa ${common} --tree";
     lta = "${pkgs.exa}/bin/exa ${common} --tree --all";
   };
 in
