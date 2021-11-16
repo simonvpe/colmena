@@ -156,15 +156,15 @@
                 terminal
                 vim
               ];
-              gui = [
+              x11 = [
                 i3
                 keyboard
                 polybar
                 rofi
                 web
               ];
-              starlord = base ++ gui ++ [ steam ./users/starlord/home.nix ];
-              neti = base ++ gui ++ [ vscode ./users/neti/home.nix ];
+              starlord = base ++ x11 ++ [ steam ./users/starlord/home.nix ];
+              neti = base ++ x11 ++ [ vscode ./users/neti/home.nix ];
             };
           };
           users = {
