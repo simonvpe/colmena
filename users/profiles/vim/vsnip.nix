@@ -8,6 +8,7 @@
     vim-vsnip
     vim-vsnip-integ
     friendly-snippets
+    cmp-vsnip
   ];
   config.programs.neovim.extraConfig = ''
     " Expand

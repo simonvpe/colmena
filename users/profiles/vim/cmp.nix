@@ -12,13 +12,10 @@
       cmp-nvim-lsp
 
       # nvim-cmp source for filesystem paths
-      cmp-path
+      #cmp-path
 
       # nvim-cmp source for treesitter nodes
       cmp-treesitter
-
-      # nvim-cmp source for vim-vsnip
-      cmp-vsnip
 
       # A completion engine plugin for neovim written in Lua.
       nvim-cmp
