@@ -6,7 +6,8 @@ let
   treesitter = pkgs.vimPlugins.nvim-treesitter.withPlugins (p: with p; [
     tree-sitter-bash
     tree-sitter-c
-    tree-sitter-cpp
+    # tree-sitter-cpp is broken
+    # tree-sitter-cpp
     tree-sitter-haskell
     tree-sitter-json
     tree-sitter-nix
