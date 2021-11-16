@@ -44,6 +44,7 @@
       vim-eunuch # Helpers for UNIX
       vim-fugitive # A Git wrapper so awesome, it should be illegal
       vim-hoogle # Vim plugin used to query hoogle
+      vim-merginal
       vim-nix # Vim configuration files for Nix
       vim-sensible # Defaults everyone can agree on
       vim-sleuth
