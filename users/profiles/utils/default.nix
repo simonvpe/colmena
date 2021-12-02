@@ -1,0 +1,3 @@
+{
+  programs.multitail.enable = true;
+}

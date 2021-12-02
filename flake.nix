@@ -154,6 +154,7 @@
                 ssh
                 surfraw
                 terminal
+                utils
                 vim
               ];
               x11 = [
