@@ -166,7 +166,7 @@
               ];
               starlord = base ++ x11 ++ [ steam ./users/starlord/home.nix ];
               neti = base ++ x11 ++ [ vscode ./users/neti/home.nix ];
-              simpet = base ++ [ ./users/simpet/home.nix ];
+              simpet = base ++ x11 ++ [ ./users/simpet/home.nix ];
             };
           };
           users = {
