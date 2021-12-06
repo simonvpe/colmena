@@ -5,10 +5,12 @@
 }:
 
 {
-  options.programs.multitail.enableMultitail = mkEnableOption "multitail";
+  options.programs = {
+    multitail.enable = lib.mkEnableOption "multitail";
+  };
 
   config = {}
-    // (mkIf cfg.enableMultitail {
+    // (lib.mkIf config.programs.multitail.enable {
       home.packages = [ pkgs.multitail ];
     });
 
