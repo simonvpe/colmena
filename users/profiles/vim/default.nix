@@ -25,6 +25,9 @@
 
     # Syntax highlighting
     ./treesitter.nix
+
+    # Language configurations
+    ./languages/c++.nix
   ];
   config.programs.neovim = {
     enable = true;
