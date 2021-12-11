@@ -19,4 +19,6 @@
     ];
     uid = 1000;
   };
+
+  services.lorri.enable = true;
 }

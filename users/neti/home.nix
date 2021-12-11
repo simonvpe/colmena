@@ -38,8 +38,8 @@
 
     systemd.user.mounts.home-neti-hosts-delia = {
       Unit.Description = "Mount delia over sshfs with fuse";
-      Unit.After = [ "age.service" "openfortivpn-1.service" "ssh-agent.service"];
-      Unit.Requires = [ "age.service" "openfortivpn-1.service" "ssh-agent.service"];
+      Unit.After = [ "age.service" "openfortivpn-1.service" "ssh-agent.service" ];
+      Unit.Requires = [ "age.service" "openfortivpn-1.service" "ssh-agent.service" ];
       Install.WantedBy = [ "default.target" ];
       Mount.What = "delia:/home/simpet/projects";
       Mount.Where = "/home/neti/hosts/delia";
@@ -69,5 +69,7 @@
       Automount.Where = config.systemd.user.mounts.home-neti-hosts-delia.Mount.Where;
       Install.WantedBy = [ "default.target" ];
     };
+
+    services.lorri.enable = true;
   };
 }
