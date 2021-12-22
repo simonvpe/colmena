@@ -132,8 +132,8 @@
             };
             suites = with profiles; rec {
               base = [ core shell nix networking users.root ];
-              laptop = base ++ [ docker printing x11 wifi pam tpm sound users.starlord users.neti ];
-              desktop = base ++ [ printing x11 pam tpm sound users.starlord users.neti ];
+              laptop = base ++ [ libvirtd docker printing x11 wifi pam tpm sound users.starlord users.neti ];
+              desktop = base ++ [ libvirtd printing x11 pam tpm sound users.starlord users.neti ];
             };
           };
         };
@@ -147,6 +147,7 @@
               base = [
                 shell
                 bat
+                cybernet
                 direnv
                 exa
                 skim
