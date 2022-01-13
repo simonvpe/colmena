@@ -6,6 +6,7 @@
 {
 
   imports = [
+    ./dhall.nix
     ./gitsigns.nix
     ./skim.nix
     ./lspconfig.nix
