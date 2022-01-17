@@ -42,6 +42,9 @@
         . ~/.bashrc
       fi
     '';
+
+    # neither alacritty nor kitty works on non NixOs hosts
+    terminal.package = lib.mkForce pkgs.termite;
   };
 
 }

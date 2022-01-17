@@ -29,9 +29,12 @@ in
     type = lib.types.ints.positive;
     default = 10;
   };
-  config.terminal.package = pkgs.alacritty;
-  config.terminal.config.settings = {
-    font.normal.family = "MesloLGS Nerd Font Mono";
-    font.size = cfg.fontSize;
-  } // (theme "tomorrow_night_bright");
+  config.terminal.package = lib.mkDefault pkgs.alacritty;
+  config.terminal.config = lib.mkIf (cfg.package == pkgs.alacritty) (lib.mkDefault {
+    settings = {
+      font.normal.family = "MesloLGS Nerd Font Mono";
+      font.size = cfg.fontSize;
+    };
+  } // (theme "tomorrow_night_bright"));
+  config.home.packages = [ config.terminal.package ];
 }
