@@ -4,6 +4,7 @@
 
     delta = {
       enable = true;
+      options.diff-so-fancy = true;
     };
 
     extraConfig = {
