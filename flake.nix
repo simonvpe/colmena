@@ -30,11 +30,6 @@
       agenix.url = "github:ryantm/agenix";
       agenix.inputs.nixpkgs.follows = "latest";
 
-      nvfetcher.url = "github:berberman/nvfetcher";
-      nvfetcher.inputs.nixpkgs.follows = "latest";
-      nvfetcher.inputs.flake-compat.follows = "digga/deploy/flake-compat";
-      nvfetcher.inputs.flake-utils.follows = "digga/flake-utils-plus/flake-utils";
-
       naersk.url = "github:nmattia/naersk";
       naersk.inputs.nixpkgs.follows = "latest";
 
@@ -52,8 +47,8 @@
       nixlib.follows = "digga/nixlib";
       blank.follows = "digga/blank";
       flake-utils-plus.follows = "digga/flake-utils-plus";
-      flake-utils.follows = "digga/flake-utils";
-      nix-tree.inputs.flake-utils.follows = "digga/flake-utils";
+      flake-utils.follows = "digga/flake-utils-plus";
+      nix-tree.inputs.flake-utils.follows = "digga/flake-utils-plus";
       # end ANTI CORRUPTION LAYER
     };
 
@@ -66,7 +61,6 @@
     , nixos-hardware
     , nur
     , agenix
-    , nvfetcher
     , deploy
     , rust-overlay
     , nix-tree
@@ -82,10 +76,8 @@
           nixos = {
             imports = [ (digga.lib.importOverlays ./overlays) ];
             overlays = [
-              digga.overlays.patchedNix
               nur.overlay
               agenix.overlay
-              nvfetcher.overlay
               deploy.overlay
               rust-overlay.overlay
               nix-tree.overlay
