@@ -68,4 +68,8 @@ in
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
+
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+  nixpkgs.config.allowUnfree = true;
 }
