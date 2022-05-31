@@ -36,6 +36,8 @@
       h1rd = "hard HEAD~1";
 
       # logging
+      tree = "git log --all --pretty=oneline --graph --abbrev-commit";
+
       lg =
         "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
       plog =
