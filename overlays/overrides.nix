@@ -12,7 +12,9 @@ channels: final: prev: {
     qutebrowser
     rage
     signal-desktop
-    starship;
+    starship
+    nvim
+    ;
 
   haskellPackages = prev.haskellPackages.override
     (old: {
