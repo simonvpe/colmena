@@ -14,7 +14,7 @@
       # plenary-nvim # TODO: debugging
       # nvim-dap # TODO: Debugging
       # Gaze deeply into unknown regions using the power of the moon.
-      telescope-nvim
+      # telescope-nvim
     ];
 
     # See https://sharksforarms.dev/posts/neovim-rust/
