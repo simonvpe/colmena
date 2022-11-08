@@ -88,6 +88,9 @@
       " Automatically set the current working directory to the file
       " you're on
       set autochdir
+
+      let nvimrc = system("${pkgs.upsearch}/bin/upsearch .nvimrc")
+      exec "source " . nvimrc
     '';
   };
 }
