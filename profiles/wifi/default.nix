@@ -16,6 +16,8 @@
     Bolema.psk = "Split053";
     Eckero_public = { };
     Inpro.psk = "Brunnsvatten";
-    Viking_Public = { };
+    # Viking_Public = { };
+    NetiGuest.psk = "N1@i75&S!";
+    Guest.psk = "Welcome2u";
   };
 }

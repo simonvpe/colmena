@@ -14,6 +14,7 @@
     aliases = {
       a = "add -p";
       brd = "!git for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:iso8601)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'";
+      cleanx = "clean -xfd --exclude=.nvimrc --exclude=.envrc --exclude=.direnv --exclude=shell.nix";
       co = "checkout";
       cob = "checkout -b";
       f = "fetch -p";

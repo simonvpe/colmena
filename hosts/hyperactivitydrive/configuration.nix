@@ -28,6 +28,7 @@
   # required from the wifi profile
   networking.wireless.interfaces = [ "wlo1" ];
   networking.interfaces.wlo1.useDHCP = true;
+  networking.interfaces.enp0s13f0u1u1.useDHCP = true;
 
   hardware.video.hidpi.enable = pkgs.lib.mkDefault true;
   hardware.bluetooth.enable = true;

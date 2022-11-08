@@ -10,14 +10,20 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = [
+    "i915.enable_psr=0"
+    "intel_idle.max_cstate=2"
+  ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/506c69ff-c136-4e26-ba53-66f63f14be11";
+    {
+      device = "/dev/disk/by-uuid/506c69ff-c136-4e26-ba53-66f63f14be11";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/60C5-10BF";
+    {
+      device = "/dev/disk/by-uuid/60C5-10BF";
       fsType = "vfat";
     };
 

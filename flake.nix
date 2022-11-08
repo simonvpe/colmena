@@ -7,7 +7,7 @@
 
   inputs =
     {
-      nixos.url = "github:nixos/nixpkgs/21.11";
+      nixos.url = "github:nixos/nixpkgs/release-22.05";
       latest.url = "github:nixos/nixpkgs/nixos-unstable";
 
       digga.url = "github:divnix/digga";
@@ -15,7 +15,7 @@
       digga.inputs.nixlib.follows = "nixos";
       digga.inputs.home-manager.follows = "home";
 
-      home.url = "github:nix-community/home-manager";
+      home.url = "github:nix-community/home-manager/release-22.05";
       home.inputs.nixpkgs.follows = "nixos";
 
       darwin.url = "github:LnL7/nix-darwin";
@@ -32,9 +32,6 @@
       rust-overlay.url = "github:oxalica/rust-overlay";
       rust-overlay.inputs.nixpkgs.follows = "latest";
 
-      nix-tree.url = "github:utdemir/nix-tree";
-      nix-tree.inputs.nixpkgs.follows = "latest";
-
       nixos-hardware.url = "github:simonvpe/nixos-hardware/asus-zenbook-ux371";
 
       # start ANTI CORRUPTION LAYER
@@ -44,7 +41,6 @@
       blank.follows = "digga/blank";
       flake-utils-plus.follows = "digga/flake-utils-plus";
       flake-utils.follows = "digga/flake-utils-plus";
-      nix-tree.inputs.flake-utils.follows = "digga/flake-utils-plus";
       # end ANTI CORRUPTION LAYER
     };
 
@@ -58,7 +54,6 @@
     , agenix
     , deploy
     , rust-overlay
-    , nix-tree
     , ...
     } @ inputs:
     digga.lib.mkFlake
@@ -75,7 +70,6 @@
               agenix.overlay
               deploy.overlay
               rust-overlay.overlay
-              nix-tree.overlay
               ./pkgs/default.nix
             ];
           };

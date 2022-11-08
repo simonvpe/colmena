@@ -14,6 +14,9 @@ channels: final: prev: {
     signal-desktop
     starship
     nvim
+    tor-browser-bundle-bin
+    docker
+    micromamba
     ;
 
   haskellPackages = prev.haskellPackages.override

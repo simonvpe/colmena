@@ -30,5 +30,6 @@
 
   nixpkgs = {
     config.allowUnfree = true;
+    config.allowBroken = true;
   };
 }
