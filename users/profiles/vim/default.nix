@@ -7,11 +7,11 @@
 
   imports = [
     ./dhall.nix
-    ./gitsigns.nix
+    # ./gitsigns.nix
     ./skim.nix
     ./lspconfig.nix
     ./cmp.nix
-    ./rust-tools.nix
+    # ./rust-tools.nix
     ./trouble.nix
     ./floaterm.nix
 
@@ -53,7 +53,7 @@
       vim-sensible # Defaults everyone can agree on
       vim-sleuth
       vim-surround # Quoting/parenthesizing made simple
-      rust-tools-nvim
+      # rust-tools-nvim
     ];
     extraConfig = ''
       " General settings
